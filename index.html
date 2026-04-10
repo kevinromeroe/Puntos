@@ -163,19 +163,19 @@ footer{border-top:1px solid var(--border);padding:1rem 2rem;display:flex;justify
 
     <!-- VEREDICTOS -->
     <div class="section">
-      <div class="section-title">Las 3 preguntas del negocio</div>
+      <div class="section-title">Las 3 preguntas del negocio · acumulado enero – abril 2026</div>
       <div class="veredicto" id="veredicto"></div>
     </div>
 
     <!-- RANKING -->
     <div class="section">
-      <div class="section-title">Ranking de distribuidores · acumulado 2026</div>
+      <div class="section-title">Ranking de distribuidores · acumulado enero – abril 2026</div>
       <div class="ranking" id="ranking"></div>
     </div>
 
     <!-- GRÁFICA -->
     <div class="section">
-      <div class="section-title">Tendencia semanal por distribuidor</div>
+      <div class="section-title">Tendencia semanal durante la Campaña Mundial</div>
       <div class="chart-wrap">
         <div class="chart-header">
           <div>
@@ -188,15 +188,15 @@ footer{border-top:1px solid var(--border);padding:1rem 2rem;display:flex;justify
           <canvas id="chart"></canvas>
         </div>
         <div class="insight-box">
-          <div class="insight-title">Lo que dice la gráfica</div>
+          <div class="insight-title" id="insight-title">¿Qué pasó durante la campaña?</div>
           <div class="insight-list" id="chart-insights"></div>
         </div>
       </div>
     </div>
 
-    <!-- CAMPAÑA ABRIL -->
+    <!-- CAMPAÑA MUNDIAL -->
     <div class="section">
-      <div class="section-title">Campaña especial · 25 – 30 abril 2026</div>
+      <div class="section-title">Campaña Mundial · 25 marzo – 30 abril 2026</div>
       <div class="promo-panel" id="promo-panel"></div>
     </div>
 
@@ -430,6 +430,29 @@ function renderChart(){
     }
   };
 
+  const preSems3  = semanas.filter(s=>!isPromo(s));
+  const avgAnual3 = preSems3.length ? preSems3.reduce((a,s)=>a+totalSem(s),0)/preSems3.length : 0;
+
+  // Plugin línea de promedio anual
+  const avgLinePlugin = {
+    id:'avgLine',
+    afterDraw(c){
+      if(!avgAnual3) return;
+      const{ctx,chartArea:ca,scales:{y}}=c;
+      const yPos=y.getPixelForValue(avgAnual3);
+      ctx.save();
+      ctx.setLineDash([6,4]);
+      ctx.strokeStyle='rgba(100,100,100,0.35)';
+      ctx.lineWidth=1.5;
+      ctx.beginPath();ctx.moveTo(ca.left,yPos);ctx.lineTo(ca.right,yPos);ctx.stroke();
+      ctx.fillStyle='rgba(100,100,100,0.6)';
+      ctx.font='bold 10px Barlow Condensed,sans-serif';
+      ctx.textAlign='right';
+      ctx.fillText('Prom. anual: '+fmt(avgAnual3),ca.right-4,yPos-5);
+      ctx.restore();
+    }
+  };
+
   const datasets=dists.filter(d=>active.has(d)).map(d=>({
     label:d,
     data:semanas.map(s=>get(d,s)),
@@ -447,7 +470,7 @@ function renderChart(){
   if(chartInst)chartInst.destroy();
   chartInst=new Chart(ctx,{
     type:'line',data:{labels:semanas.map(s=>'S'+s.num),datasets},
-    plugins:[promoPlugin],
+    plugins:[promoPlugin, avgLinePlugin],
     options:{
       responsive:true,maintainAspectRatio:false,
       plugins:{
@@ -469,52 +492,80 @@ function renderChart(){
       }
     }
   });
-  document.getElementById('chart-sub').textContent=`S1 (5 ene) → S${semanas.length} (${semanas[semanas.length-1]?.fdate||''}) · Pasa el cursor sobre la gráfica para ver el detalle`;
+  const promoSems2 = semanas.filter(isPromo);
+  const preSems2   = semanas.filter(s=>!isPromo(s));
+  const avgAnual2  = preSems2.length ? preSems2.reduce((a,s)=>a+totalSem(s),0)/preSems2.length : 0;
+  document.getElementById('chart-sub').textContent =
+    promoSems2.length > 0
+      ? `Semanas de campaña resaltadas en naranja · Comparación vs promedio anual 2026: ${fmt(avgAnual2)} cód/sem`
+      : `Semanas de campaña (25 mar–30 abr) se resaltarán en naranja al registrarse · Promedio anual: ${fmt(avgAnual2)} cód/sem`;
 }
 
 // ── CHART INSIGHTS ─────────────────────────────────────────────
 function renderChartInsights(){
-  const items=[];
-  const activeDists = dists.filter(d=>totalDist(d)>0);
+  const items = [];
+  const promoSems  = semanas.filter(isPromo);
+  const preSems    = semanas.filter(s => !isPromo(s));
 
-  // 1. Tendencia clara semana a semana: línea total
-  const weekTotals = semanas.map(s=>totalSem(s));
-  const first3avg  = weekTotals.slice(0,3).reduce((a,b)=>a+b,0)/3;
-  const last3avg   = weekTotals.slice(-3).reduce((a,b)=>a+b,0)/3;
-  const trendPct   = ((last3avg-first3avg)/first3avg*100);
-  const trendDir   = trendPct>=0?'creciendo':'decreciendo';
-  items.push({c:trendPct>=0?'g':'r',
-    t:`<strong>Tendencia general ${trendDir}:</strong> las primeras 3 semanas promediaron <strong>${fmt(first3avg)} códigos</strong>, las últimas 3 promedian <strong>${fmt(last3avg)} códigos</strong> (${trendPct>=0?'+':''}${trendPct.toFixed(0)}%).`});
+  // Promedio anual (todas las semanas pre-campaña)
+  const avgAnual   = preSems.length
+    ? preSems.reduce((a,s)=>a+totalSem(s),0) / preSems.length
+    : 0;
 
-  // 2. Semana pico y semana más baja
-  const peakS  = semanas.reduce((a,s)=>totalSem(s)>totalSem(a)?s:a);
-  const lowS   = semanas.reduce((a,s)=>totalSem(s)<totalSem(a)?s:a);
-  items.push({c:'b',
-    t:`La semana de <strong>mayor actividad fue S${peakS.num} (${peakS.idate})</strong> con ${fmt(totalSem(peakS))} códigos. La de <strong>menor actividad, S${lowS.num} (${lowS.idate})</strong> con ${fmt(totalSem(lowS))} códigos.`});
+  // Promedio durante campaña
+  const avgCampaña = promoSems.length
+    ? promoSems.reduce((a,s)=>a+totalSem(s),0) / promoSems.length
+    : 0;
 
-  // 3. Quién mueve la aguja: distribuidor más influyente en la variabilidad
-  let maxVarDist='', maxVar=0;
-  activeDists.forEach(d=>{
-    const vals=semanas.map(s=>get(d,s));
-    const mean=vals.reduce((a,b)=>a+b,0)/vals.length;
-    const std=Math.sqrt(vals.reduce((a,v)=>a+(v-mean)**2,0)/vals.length);
-    if(std>maxVar){maxVar=std;maxVarDist=d;}
-  });
-  items.push({c:'a',
-    t:`<strong>${maxVarDist}</strong> es el distribuidor que más mueve la gráfica — tiene la mayor variación semana a semana, lo que significa que su comportamiento impacta directamente la tendencia general del programa.`});
+  // --- Contexto: cómo se compara la gráfica ---
+  if(promoSems.length > 0){
+    const delta    = avgCampaña - avgAnual;
+    const deltaPct = avgAnual > 0 ? (delta/avgAnual*100) : 0;
+    const isUp     = delta >= 0;
+    items.push({c: isUp?'g':'r',
+      t:`<strong>¿Cómo se mide?</strong> Se compara el promedio semanal de las semanas de campaña (<strong>${fmt(avgCampaña)} cód/sem</strong>) contra el promedio de todas las semanas previas de 2026 (<strong>${fmt(avgAnual)} cód/sem</strong>). La campaña registra un <strong>${isUp?'incremento':'descenso'} del ${Math.abs(deltaPct).toFixed(1)}%</strong> respecto al año.`});
 
-  // 4. Distribuidores consistentes vs irregulares
-  const sorted = activeDists.map(d=>{
-    const vals=semanas.map(s=>get(d,s));
-    const mean=vals.reduce((a,b)=>a+b,0)/vals.length;
-    const std=Math.sqrt(vals.reduce((a,v)=>a+(v-mean)**2,0)/vals.length);
-    return {d, cv: mean>0?std/mean:99};
-  }).sort((a,b)=>a.cv-b.cv);
-  const mostStable = sorted[0];
-  items.push({c:'g',
-    t:`<strong>${mostStable.d}</strong> es el más constante semana a semana (menor variación relativa). Es el distribuidor más predecible del programa — base sólida para proyecciones.`});
+    // Qué distribuidor más creció durante campaña vs su propio promedio anual
+    let topGrowthDist='', topGrowthPct=-Infinity;
+    dists.forEach(d=>{
+      const preAvg   = preSems.length  ? preSems.reduce((a,s)=>a+get(d,s),0)/preSems.length   : 0;
+      const promoAvg = promoSems.length ? promoSems.reduce((a,s)=>a+get(d,s),0)/promoSems.length : 0;
+      if(preAvg > 0){
+        const g = (promoAvg - preAvg)/preAvg*100;
+        if(g > topGrowthPct){ topGrowthPct=g; topGrowthDist=d; }
+      }
+    });
+    if(topGrowthDist)
+      items.push({c:'g',
+        t:`<strong>${topGrowthDist}</strong> es el distribuidor con mayor incremento durante la campaña: su promedio semanal pasó de <strong>${fmt(preSems.reduce((a,s)=>a+get(topGrowthDist,s),0)/preSems.length)} cód/sem</strong> (año) a <strong>${fmt(promoSems.reduce((a,s)=>a+get(topGrowthDist,s),0)/promoSems.length)} cód/sem</strong> (campaña) — <strong>${topGrowthPct>=0?'+':''}${topGrowthPct.toFixed(0)}%</strong>.`});
 
-  document.getElementById('chart-insights').innerHTML=items.map(i=>
+    // Distribuidor que más bajó durante campaña
+    let topDropDist='', topDropPct=Infinity;
+    dists.forEach(d=>{
+      const preAvg   = preSems.length   ? preSems.reduce((a,s)=>a+get(d,s),0)/preSems.length   : 0;
+      const promoAvg = promoSems.length ? promoSems.reduce((a,s)=>a+get(d,s),0)/promoSems.length : 0;
+      if(preAvg > 0){
+        const g = (promoAvg - preAvg)/preAvg*100;
+        if(g < topDropPct){ topDropPct=g; topDropDist=d; }
+      }
+    });
+    if(topDropDist && topDropPct < 0)
+      items.push({c:'r',
+        t:`<strong>${topDropDist}</strong> fue el que más cayó durante la campaña respecto a su ritmo habitual del año: <strong>${topDropPct.toFixed(0)}%</strong> por debajo de su promedio previo.`});
+
+  } else {
+    // Campaña aún no en datos — mostrar tendencia anual
+    const weekTotals = semanas.map(s=>totalSem(s));
+    const first3avg  = weekTotals.slice(0,3).reduce((a,b)=>a+b,0)/3;
+    const last3avg   = weekTotals.slice(-3).reduce((a,b)=>a+b,0)/3;
+    const trendPct   = ((last3avg-first3avg)/first3avg*100);
+    items.push({c: trendPct>=0?'g':'r',
+      t:`<strong>¿Cómo se medirá la campaña?</strong> El promedio semanal del año hasta ahora es <strong>${fmt(avgAnual)} códigos/sem</strong>. Cuando lleguen los datos de campaña, ese número será la línea base de comparación. Las semanas de campaña se verán resaltadas en naranja en la gráfica.`});
+    items.push({c:'b',
+      t:`Tendencia 2026 antes de la campaña: las primeras 3 semanas promediaron <strong>${fmt(first3avg)}</strong> vs las últimas 3 con <strong>${fmt(last3avg)}</strong> (${trendPct>=0?'+':''}${trendPct.toFixed(0)}%).`});
+  }
+
+  document.getElementById('chart-insights').innerHTML = items.map(i=>
     `<div class="insight-row"><div class="i-dot ${i.c}"></div><div>${i.t}</div></div>`
   ).join('');
 }
