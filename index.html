@@ -212,7 +212,7 @@ footer{border-top:1px solid var(--border);padding:1rem 2rem;display:flex;justify
 
 <script>
 const CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSOVJP3pCfnV04l0uWUSVZrOGOCyR2JYvEaLrsVKdoChLTG3wapP0I4aVurGrTliVd6WQctsqZCZMLb/pub?output=csv";
-const PROMO_START = "2026-04-25", PROMO_END = "2026-04-30";
+const PROMO_START = "2026-03-25", PROMO_END = "2026-04-30";
 
 const COLORS = {COSTAOIL:"#E31837",COMTEXACO:"#1D4ED8",DLO:"#15803D",OILRED:"#7C3AED",SWISSLUB:"#EA580C",SAI:"#9CA3AF"};
 const DASHES = {COSTAOIL:[],COMTEXACO:[6,3],DLO:[3,3],OILRED:[8,3,2,3],SWISSLUB:[4,2],SAI:[2,2]};
@@ -266,7 +266,7 @@ function parse(text){
   const sm={};
   rows.forEach(r=>{if(!sm[r.sem])sm[r.sem]={sem:r.sem,num:r.num,idate:r.idate,fdate:r.fdate};});
   semanas=Object.values(sm).sort((a,b)=>a.num-b.num);
-  dists=[...new Set(rows.map(r=>r.dist))].filter(Boolean);
+  dists=[...new Set(rows.map(r=>r.dist))].filter(d=>d&&d!=='SAI');
   active=new Set(dists);
   dists.forEach(d=>{cmap[d]={};rows.filter(r=>r.dist===d).forEach(r=>{cmap[d][r.sem]=r.codes;});});
 }
@@ -301,7 +301,7 @@ function build(){
   const first=semanas[0], last=semanas[semanas.length-1];
   document.getElementById('hero-periodo').textContent=
     (first?first.idate:'—')+' → '+(last?last.fdate:'—')+
-    ' · '+semanas.length+' semanas registradas · Campaña de abril pendiente';
+    ' · '+semanas.length+' semanas · Campaña 25 mar – 30 abr en curso';
 
   renderVeredictos(grandTotal,avgSem);
   renderRanking(grandTotal);
@@ -324,8 +324,14 @@ function renderVeredictos(grandTotal, avgSem){
   const trendPct=((avgLast-avgFirst)/avgFirst*100);
   const trendDir=trendPct>=0?'Crecimiento':'Descenso';
 
+  // Semanas dentro del período de campaña
+  const promoSemanas = semanas.filter(isPromo);
+  const prePromo = semanas.filter(s => !isPromo(s));
+  const baseAvg = prePromo.length
+    ? prePromo.slice(-4).reduce((a,s)=>a+totalSem(s),0) / Math.min(4, prePromo.length)
+    : 0;
+
   // SAI inactivo
-  const saiTotal=totalDist('SAI');
   const activeDists=dists.filter(d=>totalDist(d)>0).length;
 
   document.getElementById('veredicto').innerHTML=`
@@ -340,15 +346,17 @@ function renderVeredictos(grandTotal, avgSem){
       <div class="v-detalle">Las primeras 4 semanas promediaron <strong>${fmt(avgFirst)} códigos/sem</strong>. Las últimas 4, <strong>${fmt(avgLast)} códigos/sem</strong>. Tendencia ${trendPct>=0?'positiva':'a la baja'} del ${Math.abs(trendPct).toFixed(1)}%.</div>
     </div>
     <div class="v-card amber">
-      <div class="v-pregunta">¿Campaña de abril impactó?</div>
-      <div class="v-respuesta">Datos pendientes de registro</div>
-      <div class="v-detalle">La campaña del <strong>25 al 30 de abril</strong> aún no aparece en el sistema. Solo hay <strong>${activeDists} de ${dists.length} distribuidores activos</strong> — SAI lleva 0 códigos en todas las semanas.</div>
+      <div class="v-pregunta">¿La campaña incrementó el ingreso?</div>
+      <div class="v-respuesta">${promoSemanas.length>0?'Campaña en curso — ver gráfica':'Campaña del 25 mar – 30 abr'}</div>
+      <div class="v-detalle">${promoSemanas.length>0
+        ? `Se registraron <strong>${promoSemanas.length} semana(s)</strong> dentro del período de campaña. Línea base previa: <strong>${fmt(baseAvg)} códigos/sem</strong>.`
+        : `La campaña cubre del <strong>25 de marzo al 30 de abril</strong>. Línea base para medir impacto: <strong>${fmt(baseAvg)} códigos/sem</strong> (prom. de semanas previas).`}</div>
     </div>`;
 }
 
 // ── RANKING ───────────────────────────────────────────────────
 function renderRanking(grandTotal){
-  const sorted=[...dists].filter(d=>d!=='SAI').sort((a,b)=>totalDist(b)-totalDist(a));
+  const sorted=[...dists].sort((a,b)=>totalDist(b)-totalDist(a));
   const max=totalDist(sorted[0])||1;
 
   // Delta última semana vs penúltima por dist
@@ -379,16 +387,6 @@ function renderRanking(grandTotal){
       ${dHtml}
     </div>`;
   });
-
-  // SAI siempre aparte
-  html+=`<div class="rank-card inactivo">
-    <div class="rank-pos">Sin actividad</div>
-    <div class="rank-name">SAI</div>
-    <div class="rank-val">0</div>
-    <div class="rank-pct">0 códigos en 13 sem.</div>
-    <div class="rank-bar"><div class="rank-fill" style="width:0%"></div></div>
-    <div class="rank-alerta">⚠ Revisar activación</div>
-  </div>`;
 
   document.getElementById('ranking').innerHTML=html;
 }
@@ -477,33 +475,44 @@ function renderChart(){
 // ── CHART INSIGHTS ─────────────────────────────────────────────
 function renderChartInsights(){
   const items=[];
+  const activeDists = dists.filter(d=>totalDist(d)>0);
 
-  // Semana pico total
-  const picSem=semanas.reduce((a,s)=>totalSem(s)>totalSem(a)?s:a);
-  const picVal=totalSem(picSem);
-  items.push({c:'r',t:`La semana de mayor actividad fue <strong>S${picSem.num} (${picSem.idate})</strong> con <strong>${fmt(picVal)} códigos</strong> en total entre todos los distribuidores.`});
+  // 1. Tendencia clara semana a semana: línea total
+  const weekTotals = semanas.map(s=>totalSem(s));
+  const first3avg  = weekTotals.slice(0,3).reduce((a,b)=>a+b,0)/3;
+  const last3avg   = weekTotals.slice(-3).reduce((a,b)=>a+b,0)/3;
+  const trendPct   = ((last3avg-first3avg)/first3avg*100);
+  const trendDir   = trendPct>=0?'creciendo':'decreciendo';
+  items.push({c:trendPct>=0?'g':'r',
+    t:`<strong>Tendencia general ${trendDir}:</strong> las primeras 3 semanas promediaron <strong>${fmt(first3avg)} códigos</strong>, las últimas 3 promedian <strong>${fmt(last3avg)} códigos</strong> (${trendPct>=0?'+':''}${trendPct.toFixed(0)}%).`});
 
-  // COSTAOIL consistente arriba
-  const coTots=semanas.map(s=>get('COSTAOIL',s));
-  const coTop=coTots.filter(v=>v===Math.max(...coTots)).length;
-  const coRankedFirst=semanas.filter(s=>
-    dists.every(d=>d==='COSTAOIL'||get('COSTAOIL',s)>=get(d,s))
-  ).length;
-  items.push({c:'g',t:`<strong>COSTAOIL</strong> fue el distribuidor líder en <strong>${coRankedFirst} de ${semanas.length} semanas</strong>, mostrando la mayor consistencia del programa.`});
+  // 2. Semana pico y semana más baja
+  const peakS  = semanas.reduce((a,s)=>totalSem(s)>totalSem(a)?s:a);
+  const lowS   = semanas.reduce((a,s)=>totalSem(s)<totalSem(a)?s:a);
+  items.push({c:'b',
+    t:`La semana de <strong>mayor actividad fue S${peakS.num} (${peakS.idate})</strong> con ${fmt(totalSem(peakS))} códigos. La de <strong>menor actividad, S${lowS.num} (${lowS.idate})</strong> con ${fmt(totalSem(lowS))} códigos.`});
 
-  // Caída S6 y recuperación
-  const s5=semanas.find(s=>s.num===5), s6=semanas.find(s=>s.num===6);
-  if(s5&&s6){
-    const drop=((totalSem(s6)-totalSem(s5))/totalSem(s5)*100).toFixed(0);
-    items.push({c:'a',t:`Se observa una caída notable en <strong>S6 (9 feb)</strong>: el total bajó ${Math.abs(drop)}% respecto a la semana anterior. Comportamiento puntual que no afectó la tendencia general.`});
-  }
+  // 3. Quién mueve la aguja: distribuidor más influyente en la variabilidad
+  let maxVarDist='', maxVar=0;
+  activeDists.forEach(d=>{
+    const vals=semanas.map(s=>get(d,s));
+    const mean=vals.reduce((a,b)=>a+b,0)/vals.length;
+    const std=Math.sqrt(vals.reduce((a,v)=>a+(v-mean)**2,0)/vals.length);
+    if(std>maxVar){maxVar=std;maxVarDist=d;}
+  });
+  items.push({c:'a',
+    t:`<strong>${maxVarDist}</strong> es el distribuidor que más mueve la gráfica — tiene la mayor variación semana a semana, lo que significa que su comportamiento impacta directamente la tendencia general del programa.`});
 
-  // DLO recuperación reciente
-  const dloS11=get('DLO',semanas[10]), dloS13=get('DLO',semanas[12]);
-  if(dloS11&&dloS13&&dloS11<dloS13){
-    const rec=((dloS13-dloS11)/dloS11*100).toFixed(0);
-    items.push({c:'g',t:`<strong>DLO</strong> muestra una fuerte recuperación en las últimas semanas: pasó de ${fmt(dloS11)} códigos (S11) a <strong>${fmt(dloS13)} códigos (S13)</strong>, un incremento del ${rec}%.`});
-  }
+  // 4. Distribuidores consistentes vs irregulares
+  const sorted = activeDists.map(d=>{
+    const vals=semanas.map(s=>get(d,s));
+    const mean=vals.reduce((a,b)=>a+b,0)/vals.length;
+    const std=Math.sqrt(vals.reduce((a,v)=>a+(v-mean)**2,0)/vals.length);
+    return {d, cv: mean>0?std/mean:99};
+  }).sort((a,b)=>a.cv-b.cv);
+  const mostStable = sorted[0];
+  items.push({c:'g',
+    t:`<strong>${mostStable.d}</strong> es el más constante semana a semana (menor variación relativa). Es el distribuidor más predecible del programa — base sólida para proyecciones.`});
 
   document.getElementById('chart-insights').innerHTML=items.map(i=>
     `<div class="insight-row"><div class="i-dot ${i.c}"></div><div>${i.t}</div></div>`
@@ -512,34 +521,64 @@ function renderChartInsights(){
 
 // ── PROMO ─────────────────────────────────────────────────────
 function renderPromo(){
-  const promoSem=semanas.find(isPromo);
-  const avgTotal=dists.reduce((a,d)=>a+totalDist(d),0)/semanas.length;
+  const promoSems = semanas.filter(isPromo);
+  const prePromo  = semanas.filter(s => !isPromo(s));
+  const baseAvg   = prePromo.length
+    ? prePromo.slice(-4).reduce((a,s)=>a+totalSem(s),0) / Math.min(4,prePromo.length)
+    : 0;
 
-  // Promedio de las 4 semanas más recientes como baseline
-  const base4=semanas.slice(-4);
-  const baseAvg=base4.reduce((a,s)=>a+totalSem(s),0)/4;
+  if(promoSems.length === 0){
+    // Campaña no ha llegado aún a los datos
+    document.getElementById('promo-panel').innerHTML=`
+      <div class="promo-top">
+        <span class="promo-badge">En curso</span>
+        <span class="promo-ttl">Campaña 25 de Marzo – 30 de Abril 2026</span>
+      </div>
+      <div class="promo-pending">
+        Las semanas de campaña <strong>aún no han sido registradas</strong> en el sistema.
+        Aparecerán automáticamente aquí cada lunes que el Apps Script ejecute la carga.<br><br>
+        <strong>Línea base para medir el impacto:</strong> el promedio de las últimas 4 semanas
+        previas a la campaña es <strong>${fmt(baseAvg)} códigos/semana</strong>.
+        Cualquier resultado por encima de eso indicará un efecto positivo.
+      </div>
+      <div class="promo-dates">
+        <div class="promo-date-card"><strong>${fmt(baseAvg)}</strong>Baseline (últ. 4 sem. previas)</div>
+        <div class="promo-date-card"><strong>25 mar</strong>Inicio campaña</div>
+        <div class="promo-date-card"><strong>30 abr</strong>Cierre campaña</div>
+      </div>`;
+    return;
+  }
 
-  document.getElementById('promo-panel').innerHTML=promoSem
-  ? `<div class="promo-top"><span class="promo-badge">Campaña activa</span><span class="promo-ttl">Semana detectada en datos</span></div>
-     <div class="promo-pending">Datos de la campaña disponibles — ver gráfica.</div>`
-  : `<div class="promo-top">
-       <span class="promo-badge">Próximamente</span>
-       <span class="promo-ttl">Campaña 25 – 30 de Abril 2026</span>
-     </div>
-     <div class="promo-pending">
-       La semana de campaña <strong>aún no ha sido registrada</strong> en el sistema. 
-       Los datos aparecerán automáticamente aquí una vez que el Apps Script ejecute 
-       la consulta del lunes siguiente al cierre de la campaña.<br><br>
-       <strong>Línea base para medir el impacto:</strong> el promedio de las últimas 4 semanas 
-       registradas es <strong>${fmt(baseAvg)} códigos/semana</strong>. 
-       Cualquier resultado por encima de ese número indicará un efecto positivo de la campaña.
-     </div>
-     <div class="promo-dates">
-       <div class="promo-date-card"><strong>${fmt(baseAvg)}</strong>Baseline (prom. últ. 4 sem.)</div>
-       <div class="promo-date-card"><strong>25 abr</strong>Inicio campaña</div>
-       <div class="promo-date-card"><strong>30 abr</strong>Cierre campaña</div>
-       <div class="promo-date-card"><strong>4 may</strong>Datos disponibles en sistema</div>
-     </div>`;
+  // Hay semanas de campaña — calcular impacto
+  const promoTotal = promoSems.reduce((a,s)=>a+totalSem(s),0);
+  const promoAvg   = promoTotal / promoSems.length;
+  const delta      = promoAvg - baseAvg;
+  const deltaPct   = baseAvg > 0 ? (delta/baseAvg*100) : 0;
+  const isUp       = delta >= 0;
+
+  // Líder dentro de semanas de campaña
+  const promoByDist = {};
+  dists.forEach(d=>{ promoByDist[d] = promoSems.reduce((a,s)=>a+get(d,s),0); });
+  const promoLeader = Object.entries(promoByDist).sort((a,b)=>b[1]-a[1])[0];
+
+  document.getElementById('promo-panel').innerHTML=`
+    <div class="promo-top">
+      <span class="promo-badge">En curso</span>
+      <span class="promo-ttl">Campaña 25 Marzo – 30 Abril · ${promoSems.length} semana(s) registrada(s)</span>
+    </div>
+    <div class="promo-stats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:1rem;">
+      <div class="promo-date-card"><strong>${fmt(baseAvg)}</strong>Baseline previo</div>
+      <div class="promo-date-card"><strong>${fmt(promoAvg)}</strong>Prom. en campaña</div>
+      <div class="promo-date-card" style="color:${isUp?'var(--green)':'var(--red)'}"><strong>${isUp?'+':''}${deltaPct.toFixed(1)}%</strong>Variación vs base</div>
+      <div class="promo-date-card"><strong>${promoLeader[0]}</strong>Líder en campaña</div>
+    </div>
+    <div class="promo-pending">
+      ${isUp
+        ? `La campaña muestra un <strong>incremento del ${deltaPct.toFixed(1)}%</strong> respecto al período previo (${fmt(baseAvg)} → ${fmt(promoAvg)} códigos/sem en promedio). <strong>${promoLeader[0]}</strong> lideró con ${fmt(promoLeader[1])} códigos durante el período.`
+        : `Durante la campaña, el promedio semanal fue <strong>${Math.abs(deltaPct).toFixed(1)}% menor</strong> al período previo (${fmt(baseAvg)} → ${fmt(promoAvg)} códigos/sem). Se recomienda revisar la activación por distribuidor.`
+      }
+      ${promoSems.length < 6 ? ` Los datos se irán completando cada lunes hasta el cierre del <strong>30 de abril</strong>.` : ''}
+    </div>`;
 }
 
 init();
