@@ -2,292 +2,208 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Havoline Moto Club — Reporte Ejecutivo</title>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,900;1,700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Havoline Moto Club — Reporte Ejecutivo 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
-:root {
-  --red:#E31837; --red-dark:#A8102A; --red-light:#ff4466;
-  --promo:#E07800; --promo-bg:#FFF5E6; --promo-border:#FFD580;
-  --white:#FFFFFF; --off:#F6F6F6; --border:#E2E2E2;
-  --gray-l:#BBBBBB; --gray-m:#777777; --gray-d:#333333;
-  --black:#111111;
-  --green:#16A34A; --green-bg:#F0FDF4;
-  --blue:#1D4ED8; --blue-bg:#EFF6FF;
-  --shadow:0 1px 8px rgba(0,0,0,0.07);
+:root{
+  --red:#E31837;--white:#fff;--off:#F5F5F5;--border:#E4E4E4;
+  --gray:#777;--dark:#1A1A1A;--light:#F9F9F9;
+  --green:#15803D;--green-bg:#F0FDF4;
+  --amber:#B45309;--amber-bg:#FFFBEB;
+  --blue:#1D4ED8;--blue-bg:#EFF6FF;
+  --shadow:0 1px 6px rgba(0,0,0,0.07);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{background:var(--off);color:var(--black);font-family:'Barlow',sans-serif;font-weight:400;}
+body{background:var(--off);font-family:'Barlow',sans-serif;color:var(--dark);}
 
 /* HEADER */
-header{background:var(--white);border-bottom:3px solid var(--red);padding:0 2.5rem;display:flex;align-items:center;justify-content:space-between;height:68px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow);}
-.logo-area{display:flex;align-items:center;gap:14px;}
-.logo-img{height:36px;width:auto;}
-.logo-div{width:1px;height:28px;background:var(--border);}
-.logo-sub{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:13px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gray-m);line-height:1.3;}
-.logo-sub small{display:block;font-size:10px;font-weight:400;color:var(--gray-l);letter-spacing:2px;}
-.header-right{display:flex;align-items:center;gap:10px;}
-.update-pill{font-size:11px;color:var(--gray-m);background:var(--off);border:1px solid var(--border);border-radius:20px;padding:4px 12px;}
-.live{width:7px;height:7px;background:#22C55E;border-radius:50%;animation:blink 2s infinite;}
-@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
+header{background:var(--white);border-bottom:3px solid var(--red);height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;position:sticky;top:0;z-index:10;box-shadow:var(--shadow);}
+.logo{height:34px;}
+.header-right{display:flex;align-items:center;gap:10px;font-size:11px;color:var(--gray);letter-spacing:.5px;}
+.live{width:7px;height:7px;border-radius:50%;background:#22C55E;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
-/* PROMO BANNER */
-.promo-banner{background:var(--red);color:#fff;padding:9px 2.5rem;display:flex;align-items:center;gap:12px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;}
-.promo-tag{background:#fff;color:var(--red);padding:2px 10px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:2px;flex-shrink:0;}
+/* PAGE */
+.page{max-width:1100px;margin:0 auto;padding:2rem;}
 
-/* MAIN */
-main{padding:2rem 2.5rem;max-width:1380px;margin:0 auto;}
+/* HERO — pregunta de negocio */
+.hero{background:var(--dark);border-radius:10px;padding:2rem 2.5rem;margin-bottom:1.5rem;display:flex;justify-content:space-between;align-items:center;gap:2rem;flex-wrap:wrap;}
+.hero-left h1{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:26px;text-transform:uppercase;letter-spacing:1px;color:var(--white);line-height:1.2;}
+.hero-left h1 em{color:var(--red);font-style:normal;}
+.hero-left p{font-size:12px;color:#aaa;margin-top:6px;letter-spacing:.5px;}
+.hero-right{display:flex;gap:1.5rem;flex-wrap:wrap;}
+.hero-stat{text-align:center;}
+.hero-stat-val{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:38px;color:var(--white);line-height:1;}
+.hero-stat-val.red{color:var(--red);}
+.hero-stat-lbl{font-size:10px;color:#888;letter-spacing:2px;text-transform:uppercase;margin-top:3px;}
 
-/* SECTION LABEL */
-.slabel{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--red);margin-bottom:.85rem;display:flex;align-items:center;gap:10px;}
-.slabel::after{content:'';flex:1;height:1px;background:var(--border);}
+/* SECTION */
+.section{margin-bottom:2rem;}
+.section-title{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--red);margin-bottom:1rem;display:flex;align-items:center;gap:10px;}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border);}
 
-/* COVER / INTRO */
-.cover{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:2rem 2.5rem;margin-bottom:2rem;box-shadow:var(--shadow);display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1.5rem;}
-.cover-left h1{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:32px;letter-spacing:1px;text-transform:uppercase;color:var(--black);line-height:1.1;}
-.cover-left h1 span{color:var(--red);}
-.cover-left p{font-size:13px;color:var(--gray-m);margin-top:6px;max-width:480px;line-height:1.6;}
-.cover-meta{display:flex;flex-direction:column;gap:8px;align-items:flex-end;}
-.cover-date{font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--gray-l);}
-.cover-period{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;color:var(--black);}
-
-/* KPI ROW */
-.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:2rem;}
-.kpi{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;box-shadow:var(--shadow);position:relative;overflow:hidden;}
-.kpi-accent{position:absolute;top:0;left:0;width:100%;height:3px;background:var(--red);}
-.kpi.promo .kpi-accent{background:var(--promo);}
-.kpi.green .kpi-accent{background:var(--green);}
-.kpi-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gray-l);margin-bottom:5px;}
-.kpi-val{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:34px;color:var(--black);line-height:1;}
-.kpi.red .kpi-val{color:var(--red);}
-.kpi.promo .kpi-val{color:var(--promo);}
-.kpi.green .kpi-val{color:var(--green);}
-.kpi-sub{font-size:11px;color:var(--gray-l);margin-top:3px;}
-.kpi-delta{font-size:12px;font-weight:500;margin-top:4px;}
-.kpi-delta.up{color:var(--green);}
-.kpi-delta.down{color:var(--red);}
+/* VEREDICTO — la respuesta directa */
+.veredicto{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.5rem;}
+@media(max-width:700px){.veredicto{grid-template-columns:1fr;}}
+.v-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:1.25rem 1.5rem;box-shadow:var(--shadow);border-left:4px solid var(--border);}
+.v-card.green{border-left-color:var(--green);}
+.v-card.red{border-left-color:var(--red);}
+.v-card.amber{border-left-color:#F59E0B;}
+.v-pregunta{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gray);margin-bottom:8px;}
+.v-respuesta{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:20px;line-height:1.2;margin-bottom:8px;}
+.v-card.green .v-respuesta{color:var(--green);}
+.v-card.red .v-respuesta{color:var(--red);}
+.v-card.amber .v-respuesta{color:var(--amber);}
+.v-detalle{font-size:12px;color:var(--gray);line-height:1.5;}
+.v-detalle strong{color:var(--dark);}
 
 /* RANKING */
-.ranking-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:2rem;}
-@media(max-width:900px){.ranking-grid{grid-template-columns:repeat(3,1fr);}}
-@media(max-width:500px){.ranking-grid{grid-template-columns:repeat(2,1fr);}}
-.rank-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:1rem;box-shadow:var(--shadow);position:relative;overflow:hidden;transition:transform .15s;}
-.rank-card:hover{transform:translateY(-2px);}
-.rank-top{height:3px;background:var(--red);margin:-1rem -1rem 0.75rem;border-radius:8px 8px 0 0;}
-.rank-num{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:11px;letter-spacing:2px;color:var(--gray-l);margin-bottom:4px;}
-.rank-name{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;}
-.rank-val{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:28px;color:var(--red);line-height:1;}
-.rank-lbl{font-size:10px;color:var(--gray-l);letter-spacing:1px;text-transform:uppercase;margin-top:1px;}
-.rank-bar-wrap{height:3px;background:var(--border);border-radius:2px;margin-top:8px;overflow:hidden;}
-.rank-bar{height:100%;border-radius:2px;transition:width .8s ease;}
-.rank-delta{font-size:11px;font-weight:500;margin-top:5px;}
-.rank-delta.up{color:var(--green);}
-.rank-delta.down{color:var(--red);}
-.rank-delta.neu{color:var(--gray-l);}
+.ranking{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:1.5rem;}
+@media(max-width:800px){.ranking{grid-template-columns:repeat(3,1fr);}}
+.rank-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:1rem;box-shadow:var(--shadow);text-align:center;position:relative;}
+.rank-card.inactivo{background:var(--off);opacity:.6;}
+.rank-pos{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;color:var(--gray);margin-bottom:4px;}
+.rank-name{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:16px;letter-spacing:.5px;margin-bottom:2px;}
+.rank-val{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:28px;line-height:1;color:var(--red);}
+.rank-card.inactivo .rank-val{color:var(--gray);}
+.rank-pct{font-size:11px;color:var(--gray);margin-top:2px;}
+.rank-bar{height:3px;border-radius:2px;margin-top:8px;background:var(--border);}
+.rank-fill{height:100%;border-radius:2px;background:var(--red);transition:width .8s;}
+.rank-card.inactivo .rank-fill{background:var(--gray);}
+.rank-alerta{font-size:10px;color:var(--red);margin-top:5px;font-weight:500;letter-spacing:.5px;}
 
-/* HALLAZGOS */
-.hallazgos{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;margin-bottom:2rem;}
-.hallazgo{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;box-shadow:var(--shadow);display:flex;gap:12px;align-items:flex-start;}
-.h-icon{width:34px;height:34px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;}
-.h-icon.red{background:rgba(227,24,55,.1);}
-.h-icon.green{background:var(--green-bg);}
-.h-icon.orange{background:var(--promo-bg);}
-.h-icon.blue{background:var(--blue-bg);}
-.h-icon.gray{background:var(--off);}
-.h-body{}
-.h-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gray-l);margin-bottom:3px;}
-.h-text{font-size:13px;color:var(--gray-d);line-height:1.5;}
-.h-text strong{color:var(--black);font-weight:500;}
+/* CHART AREA */
+.chart-wrap{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:1.5rem;box-shadow:var(--shadow);}
+.chart-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem;flex-wrap:wrap;gap:.75rem;}
+.chart-ttl{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:16px;text-transform:uppercase;letter-spacing:.5px;}
+.chart-sub{font-size:11px;color:var(--gray);margin-top:2px;}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1rem;}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--gray);cursor:pointer;padding:3px 8px;border:1px solid var(--border);border-radius:4px;user-select:none;transition:all .15s;}
+.leg-item:hover{border-color:var(--red);}
+.leg-item.off{opacity:.3;}
+.leg-line{width:16px;height:3px;border-radius:1px;}
+.promo-leg{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--amber);padding:3px 8px;border:1px solid #FCD34D;border-radius:4px;background:var(--amber-bg);}
 
-/* CHART CARD */
-.chart-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin-bottom:.75rem;box-shadow:var(--shadow);}
-.chart-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem;margin-bottom:1.25rem;}
-.chart-title{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:19px;letter-spacing:.5px;text-transform:uppercase;color:var(--black);}
-.chart-sub{font-size:12px;color:var(--gray-l);margin-top:2px;}
-.controls{display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
-.ctrl-lbl{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--gray-l);}
-.btn-group{display:flex;gap:3px;}
-.btn{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:5px 11px;border:1px solid var(--border);background:var(--white);color:var(--gray-m);cursor:pointer;border-radius:4px;transition:all .15s;}
-.btn:hover{border-color:var(--red);color:var(--red);}
-.btn.active{background:var(--red);border-color:var(--red);color:#fff;}
-.legend{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:1rem;}
-.legend-item{display:flex;align-items:center;gap:6px;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--gray-m);cursor:pointer;padding:4px 8px;border-radius:4px;border:1px solid var(--border);transition:all .15s;user-select:none;}
-.legend-item:hover{border-color:var(--red);}
-.legend-item.inactive{opacity:.3;}
-.legend-line{width:18px;height:3px;border-radius:1px;flex-shrink:0;}
-.promo-leg{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--promo);padding:4px 10px;background:var(--promo-bg);border:1px solid var(--promo-border);border-radius:4px;}
-.promo-swatch{width:12px;height:12px;background:var(--promo);opacity:.3;border-radius:2px;border:1px solid var(--promo);}
+/* INSIGHT BOX — bajo la gráfica */
+.insight-box{background:var(--light);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;margin-top:1rem;}
+.insight-title{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gray);margin-bottom:.6rem;}
+.insight-list{display:flex;flex-direction:column;gap:6px;}
+.insight-row{display:flex;gap:10px;font-size:12px;color:#444;line-height:1.5;}
+.i-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px;}
+.i-dot.r{background:var(--red);}
+.i-dot.g{background:var(--green);}
+.i-dot.a{background:#F59E0B;}
+.i-dot.b{background:var(--blue);}
 
-/* CHART INSIGHTS bajo la gráfica */
-.chart-insights{background:var(--off);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;margin-bottom:2rem;}
-.ci-title{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gray-m);margin-bottom:.6rem;}
-.ci-list{display:flex;flex-direction:column;gap:5px;}
-.ci-item{font-size:12px;color:var(--gray-d);line-height:1.5;display:flex;gap:8px;align-items:flex-start;}
-.ci-dot{width:6px;height:6px;border-radius:50%;background:var(--red);margin-top:5px;flex-shrink:0;}
-.ci-dot.green{background:var(--green);}
-.ci-dot.orange{background:var(--promo);}
-.ci-dot.blue{background:var(--blue);}
-
-/* TABLE */
-.table-card{background:var(--white);border:1px solid var(--border);border-radius:8px;overflow:auto;box-shadow:var(--shadow);margin-bottom:.75rem;}
-table{width:100%;border-collapse:collapse;font-size:12px;}
-thead tr{background:var(--off);border-bottom:2px solid var(--red);}
-th{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gray-m);padding:10px 13px;text-align:right;white-space:nowrap;}
-th:first-child{text-align:left;}
-th.pc{color:var(--promo);background:var(--promo-bg);}
-td{padding:9px 13px;text-align:right;border-bottom:1px solid var(--border);color:var(--black);}
-td:first-child{text-align:left;}
-td.dn{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:1px;text-transform:uppercase;}
-td.prc{background:var(--promo-bg);color:var(--promo);font-weight:500;}
-td.tc{font-weight:500;color:var(--red);font-family:'Barlow Condensed',sans-serif;font-size:14px;}
-tbody tr:hover td{background:var(--off);}
-tbody tr:last-child td{border-bottom:none;}
-tfoot td{border-top:2px solid var(--red);background:rgba(227,24,55,.04);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:1px;color:var(--red);text-transform:uppercase;}
-tfoot td.prc{background:var(--promo-bg);color:var(--promo);}
-
-/* TABLE INSIGHTS */
-.table-insights{background:var(--off);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;margin-bottom:2rem;}
-
-/* PROMO SECTION */
-.promo-section{background:var(--promo-bg);border:1px solid var(--promo-border);border-radius:8px;padding:1.5rem;margin-bottom:2rem;}
-.promo-header{display:flex;align-items:center;gap:12px;margin-bottom:1.25rem;}
-.promo-icon{font-size:24px;}
-.promo-htitle{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:20px;letter-spacing:1px;text-transform:uppercase;color:var(--promo);}
-.promo-hsub{font-size:12px;color:var(--promo);opacity:.7;margin-top:2px;}
-.promo-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;}
-.promo-stat{background:var(--white);border:1px solid var(--promo-border);border-radius:6px;padding:.85rem 1rem;}
-.ps-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--promo);margin-bottom:4px;opacity:.8;}
-.ps-val{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:26px;color:var(--promo);}
-.ps-sub{font-size:11px;color:var(--gray-l);margin-top:2px;}
-.promo-insight{margin-top:1rem;font-size:13px;color:var(--gray-d);line-height:1.6;background:var(--white);border-radius:6px;padding:.85rem 1rem;border:1px solid var(--promo-border);}
-.promo-insight strong{color:var(--promo);}
-
-/* LOADING */
-.loading-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:1.5rem;}
-.loading-logo{height:44px;opacity:.4;}
-.lbar-wrap{width:220px;height:3px;background:var(--border);border-radius:2px;overflow:hidden;}
-.lbar{height:100%;background:var(--red);border-radius:2px;transition:width .4s ease;width:0%;}
-.ltxt{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gray-l);}
+/* PROMO PANEL */
+.promo-panel{background:var(--amber-bg);border:1px solid #FCD34D;border-radius:8px;padding:1.5rem;margin-bottom:1.5rem;}
+.promo-top{display:flex;align-items:center;gap:12px;margin-bottom:1rem;}
+.promo-badge{background:var(--red);color:#fff;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:4px 12px;border-radius:20px;}
+.promo-ttl{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:18px;text-transform:uppercase;color:var(--amber);}
+.promo-pending{font-size:13px;color:var(--amber);line-height:1.6;}
+.promo-pending strong{color:var(--dark);}
+.promo-dates{display:flex;gap:12px;flex-wrap:wrap;margin-top:.75rem;}
+.promo-date-card{background:var(--white);border:1px solid #FCD34D;border-radius:6px;padding:.6rem 1rem;font-size:12px;color:var(--amber);}
+.promo-date-card strong{display:block;font-family:'Barlow Condensed',sans-serif;font-size:18px;color:var(--dark);}
 
 /* FOOTER */
-footer{border-top:1px solid var(--border);padding:1.25rem 2.5rem;display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--gray-l);flex-wrap:wrap;gap:8px;background:var(--white);}
+footer{border-top:1px solid var(--border);padding:1rem 2rem;display:flex;justify-content:space-between;font-size:11px;color:var(--gray);background:var(--white);flex-wrap:wrap;gap:6px;}
 
-.error-box{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:3rem;text-align:center;color:var(--red);font-size:13px;}
-
-@media(max-width:700px){main{padding:1rem;}header{padding:0 1rem;}.promo-banner{padding:9px 1rem;}}
+/* LOADING */
+.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:1.25rem;}
+.lbar{width:200px;height:3px;background:var(--border);border-radius:2px;overflow:hidden;}
+.lfill{height:100%;background:var(--red);border-radius:2px;transition:width .4s;width:0%;}
+.ltxt{font-size:11px;color:var(--gray);letter-spacing:2px;text-transform:uppercase;}
+.err{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:3rem;text-align:center;color:var(--red);font-size:13px;margin:2rem 0;}
 </style>
 </head>
 <body>
 
 <header>
-  <div class="logo-area">
-    <img class="logo-img" src="https://havolinemotoclub.com/img/hav_logo.5a3a6bf5.svg" alt="Havoline Moto Club"
-         onerror="this.style.display='none';document.getElementById('lf').style.display='block'"/>
-    <div id="lf" style="display:none;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:20px;color:#E31837;letter-spacing:2px;">HAVOLINE</div>
-    <div class="logo-div"></div>
-    <div class="logo-sub">Reporte Ejecutivo
-      <small>Ingreso de Códigos · 2026</small>
-    </div>
-  </div>
+  <img class="logo" src="https://havolinemotoclub.com/img/hav_logo.5a3a6bf5.svg" alt="Havoline Moto Club"
+       onerror="this.outerHTML='<span style=\'font-family:Barlow Condensed,sans-serif;font-weight:900;font-size:20px;color:#E31837;letter-spacing:2px;\'>HAVOLINE MOTO CLUB</span>'"/>
   <div class="header-right">
-    <span class="update-pill" id="upd">Cargando...</span>
+    <span id="upd-ts">—</span>
     <div class="live"></div>
   </div>
 </header>
 
-<div class="promo-banner">
-  <span class="promo-tag">Campaña especial</span>
-  Promoción activa · 25 al 30 de abril 2026 · Semana resaltada en todas las visualizaciones
-</div>
+<div class="page">
 
-<main>
-
-  <div id="loading-section" class="loading-wrap">
-    <img class="loading-logo" src="https://havolinemotoclub.com/img/hav_logo.5a3a6bf5.svg" alt=""/>
-    <div class="lbar-wrap"><div class="lbar" id="lbar"></div></div>
+  <div class="loading" id="loading">
+    <div class="lbar"><div class="lfill" id="lfill"></div></div>
     <div class="ltxt" id="ltxt">Cargando datos...</div>
   </div>
 
   <div id="content" style="display:none">
 
-    <!-- COVER -->
-    <div class="cover">
-      <div class="cover-left">
-        <h1>Reporte de <span>ingreso de códigos</span><br>por distribuidor</h1>
-        <p id="cover-desc">Seguimiento semanal del ingreso de códigos en el programa Havoline Moto Club durante 2026, con análisis del impacto de la campaña de abril.</p>
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-left">
+        <h1>Reporte ejecutivo<br>ingreso de <em>códigos 2026</em></h1>
+        <p id="hero-periodo">5 ene → 10 abr · 13 semanas registradas · Campaña de abril pendiente</p>
       </div>
-      <div class="cover-meta">
-        <div class="cover-date" id="cover-date">—</div>
-        <div class="cover-period" id="cover-period">—</div>
+      <div class="hero-right">
+        <div class="hero-stat">
+          <div class="hero-stat-val red" id="h-total">—</div>
+          <div class="hero-stat-lbl">códigos totales</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-val" id="h-semanas">—</div>
+          <div class="hero-stat-lbl">semanas</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-val" id="h-avg">—</div>
+          <div class="hero-stat-lbl">prom / semana</div>
+        </div>
       </div>
     </div>
 
-    <!-- KPIs -->
-    <div class="slabel">Indicadores clave</div>
-    <div class="kpi-row" id="kpi-row"></div>
-
-    <!-- HALLAZGOS GENERALES -->
-    <div class="slabel">Hallazgos principales</div>
-    <div class="hallazgos" id="hallazgos-gen"></div>
+    <!-- VEREDICTOS -->
+    <div class="section">
+      <div class="section-title">Las 3 preguntas del negocio</div>
+      <div class="veredicto" id="veredicto"></div>
+    </div>
 
     <!-- RANKING -->
-    <div class="slabel">Ranking de distribuidores · acumulado 2026</div>
-    <div class="ranking-grid" id="ranking-grid"></div>
+    <div class="section">
+      <div class="section-title">Ranking de distribuidores · acumulado 2026</div>
+      <div class="ranking" id="ranking"></div>
+    </div>
 
     <!-- GRÁFICA -->
-    <div class="slabel">Tendencia semanal de ingreso de códigos</div>
-    <div class="chart-card">
-      <div class="chart-top">
-        <div>
-          <div class="chart-title">Códigos registrados por semana</div>
-          <div class="chart-sub" id="chart-sub">—</div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:7px;align-items:flex-end">
-          <div class="controls">
-            <span class="ctrl-lbl">Ver:</span>
-            <div class="btn-group">
-              <button class="btn" onclick="setRange(4,this)">4 sem</button>
-              <button class="btn" onclick="setRange(8,this)">8 sem</button>
-              <button class="btn" onclick="setRange(12,this)">12 sem</button>
-              <button class="btn active" onclick="setRange('all',this)">Todo</button>
-            </div>
+    <div class="section">
+      <div class="section-title">Tendencia semanal por distribuidor</div>
+      <div class="chart-wrap">
+        <div class="chart-header">
+          <div>
+            <div class="chart-ttl">Códigos registrados semana a semana</div>
+            <div class="chart-sub" id="chart-sub">—</div>
           </div>
+          <div class="legend" id="legend"></div>
+        </div>
+        <div style="position:relative;height:300px;">
+          <canvas id="chart"></canvas>
+        </div>
+        <div class="insight-box">
+          <div class="insight-title">Lo que dice la gráfica</div>
+          <div class="insight-list" id="chart-insights"></div>
         </div>
       </div>
-      <div class="legend" id="legend">
-        <div class="promo-leg"><div class="promo-swatch"></div>Semana promoción 25–30 abr</div>
-      </div>
-      <div style="position:relative;width:100%;height:360px;">
-        <canvas id="mainChart" role="img" aria-label="Tendencia semanal de códigos por distribuidor 2026"></canvas>
-      </div>
-    </div>
-    <div class="chart-insights">
-      <div class="ci-title">Análisis de la gráfica</div>
-      <div class="ci-list" id="chart-insights-list"></div>
     </div>
 
-    <!-- PROMOCIÓN -->
-    <div class="slabel">Análisis de la campaña · 25–30 abril 2026</div>
-    <div class="promo-section" id="promo-section"></div>
-
-    <!-- TABLA -->
-    <div class="slabel">Detalle semanal por distribuidor</div>
-    <div class="table-card">
-      <table>
-        <thead><tr id="table-head"></tr></thead>
-        <tbody id="table-body"></tbody>
-        <tfoot><tr id="table-foot"></tr></tfoot>
-      </table>
-    </div>
-    <div class="table-insights">
-      <div class="ci-title">Análisis de la tabla</div>
-      <div class="ci-list" id="table-insights-list"></div>
+    <!-- CAMPAÑA ABRIL -->
+    <div class="section">
+      <div class="section-title">Campaña especial · 25 – 30 abril 2026</div>
+      <div class="promo-panel" id="promo-panel"></div>
     </div>
 
   </div>
-  <div class="error-box" id="error-box" style="display:none"></div>
-</main>
+
+  <div class="err" id="err" style="display:none"></div>
+</div>
 
 <footer>
   <span>Havoline Moto Club · Reporte Ejecutivo · 2026</span>
@@ -295,623 +211,338 @@ footer{border-top:1px solid var(--border);padding:1.25rem 2.5rem;display:flex;ju
 </footer>
 
 <script>
-const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSOVJP3pCfnV04l0uWUSVZrOGOCyR2JYvEaLrsVKdoChLTG3wapP0I4aVurGrTliVd6WQctsqZCZMLb/pub?output=csv";
+const CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSOVJP3pCfnV04l0uWUSVZrOGOCyR2JYvEaLrsVKdoChLTG3wapP0I4aVurGrTliVd6WQctsqZCZMLb/pub?output=csv";
+const PROMO_START = "2026-04-25", PROMO_END = "2026-04-30";
 
-const DIST_COLORS = {
-  COMTEXACO:"#E31837", COSTAOIL:"#1D4ED8", OILRED:"#16A34A",
-  SAI:"#7C3AED", SWISSLUB:"#EA580C", DLO:"#0891B2",
-};
-const DIST_DASH = {
-  COMTEXACO:[], COSTAOIL:[6,3], OILRED:[3,3],
-  SAI:[8,3,2,3], SWISSLUB:[4,2], DLO:[2,2],
-};
-const PROMO_START = "2026-04-25";
-const PROMO_END   = "2026-04-30";
+const COLORS = {COSTAOIL:"#E31837",COMTEXACO:"#1D4ED8",DLO:"#15803D",OILRED:"#7C3AED",SWISSLUB:"#EA580C",SAI:"#9CA3AF"};
+const DASHES = {COSTAOIL:[],COMTEXACO:[6,3],DLO:[3,3],OILRED:[8,3,2,3],SWISSLUB:[4,2],SAI:[2,2]};
 
-let allData=[], allSemanas=[], allDist=[], codesMap={};
-let activeSet=new Set(), chart=null, currentRange='all';
+let rows=[], semanas=[], dists=[], cmap={}, active=new Set(), chartInst=null;
 
-// ── LOAD ──────────────────────────────────────────────────────
-async function loadCSV(){
-  setL("Conectando con Google Sheets...",15);
+async function init(){
+  setL("Conectando...",20);
   try{
-    const r=await fetch(CSV_URL+"&t="+Date.now());
+    const r = await fetch(CSV+"&t="+Date.now());
     if(!r.ok) throw new Error("HTTP "+r.status);
-    setL("Procesando datos...",55);
-    parseCSV(await r.text());
-    setL("Calculando hallazgos...",80);
-    await delay(150);
-    buildCodesMap();
-    render();
+    setL("Leyendo datos...",60);
+    parse(await r.text());
+    setL("Calculando...",85);
+    await sleep(150);
+    build();
     setL("Listo",100);
-    await delay(250);
-    document.getElementById('loading-section').style.display='none';
+    await sleep(200);
+    document.getElementById('loading').style.display='none';
     document.getElementById('content').style.display='block';
   }catch(e){
-    document.getElementById('loading-section').style.display='none';
-    const eb=document.getElementById('error-box');
-    eb.style.display='block';
-    eb.textContent="Error al cargar los datos: "+e.message+". Verifica que el CSV de Google Sheets esté publicado correctamente.";
+    document.getElementById('loading').style.display='none';
+    const el=document.getElementById('err');
+    el.style.display='block';
+    el.textContent="No se pudieron cargar los datos: "+e.message;
   }
 }
-function setL(t,p){document.getElementById('ltxt').textContent=t;document.getElementById('lbar').style.width=p+'%';}
-function delay(ms){return new Promise(r=>setTimeout(r,ms));}
+function setL(t,p){document.getElementById('ltxt').textContent=t;document.getElementById('lfill').style.width=p+'%';}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
 
-// ── PARSE ─────────────────────────────────────────────────────
-function parseCSV(text){
+function parse(text){
   const lines=text.trim().split('\n');
-  if(lines.length<2) throw new Error('CSV vacío o sin datos');
-  const h=lines[0].split(',').map(s=>s.replace(/"/g,'').trim().toLowerCase());
-  console.log('CSV headers:', h.join(', '));
+  const h=lines[0].split('\t').length>3 ? lines[0].split('\t') : lines[0].split(',');
+  const col=k=>h.findIndex(x=>x.replace(/"/g,'').trim().toLowerCase().includes(k));
+  const iS=col('semana'),iN=col('numero'),iD=col('distribuidor_n'),iC=col('registered_codes'),iI=col('idate'),iF=col('fdate');
 
-  // Detección flexible de columnas
-  const fi=k=>h.findIndex(x=>x.includes(k));
-  const iS=fi('semana'), iN=fi('numero'), iD=fi('distribuidor'),
-        iC=fi('registered_codes')||fi('codes'), iI=fi('idate'), iF=fi('fdate');
-
-  console.log('Cols → semana:'+iS+' num:'+iN+' dist:'+iD+' codes:'+iC+' idate:'+iI+' fdate:'+iF);
-
-  const rows=[];
-  for(let j=1;j<lines.length;j++){
-    const c=csvLine(lines[j]); if(c.length<3) continue;
-    const semVal = iS>=0 ? c[iS]||'' : 'S'+j;
-    const numVal = iN>=0 ? parseInt(c[iN])||j : j;
-    const distVal = iD>=0 ? (c[iD]||'').toUpperCase().trim() : '';
-    const codesVal = iC>=0 ? parseInt(c[iC])||0 : 0;
-    const idateVal = iI>=0 ? c[iI]||'' : '';
-    const fdateVal = iF>=0 ? c[iF]||'' : '';
-    if(!distVal) continue;
-    rows.push({semana:semVal,numSem:numVal,dist:distVal,codes:codesVal,idate:idateVal,fdate:fdateVal});
+  for(let i=1;i<lines.length;i++){
+    const c = lines[i].includes('\t') ? lines[i].split('\t') : splitCSV(lines[i]);
+    if(c.length<6) continue;
+    const dist=(c[iD]||'').replace(/"/g,'').trim().toUpperCase();
+    if(!dist) continue;
+    rows.push({
+      sem: (c[iS]||'').replace(/"/g,'').trim(),
+      num: parseInt(c[iN])||i,
+      dist,
+      codes: parseInt(c[iC])||0,
+      idate: (c[iI]||'').replace(/"/g,'').trim(),
+      fdate: (c[iF]||'').replace(/"/g,'').trim(),
+    });
   }
-
-  if(rows.length===0) throw new Error('No se encontraron filas válidas en el CSV. Headers detectados: '+h.join(', '));
-
-  allData=rows;
   const sm={};
-  rows.forEach(r=>{if(!sm[r.semana])sm[r.semana]={semana:r.semana,numSem:r.numSem,idate:r.idate,fdate:r.fdate};});
-  allSemanas=Object.values(sm).sort((a,b)=>a.numSem-b.numSem);
-  allDist=[...new Set(rows.map(r=>r.dist))].filter(Boolean);
-  activeSet=new Set(allDist);
-  console.log('Parsed → semanas:'+allSemanas.length+' distribuidores:'+allDist.length+' filas:'+rows.length);
+  rows.forEach(r=>{if(!sm[r.sem])sm[r.sem]={sem:r.sem,num:r.num,idate:r.idate,fdate:r.fdate};});
+  semanas=Object.values(sm).sort((a,b)=>a.num-b.num);
+  dists=[...new Set(rows.map(r=>r.dist))].filter(Boolean);
+  active=new Set(dists);
+  dists.forEach(d=>{cmap[d]={};rows.filter(r=>r.dist===d).forEach(r=>{cmap[d][r.sem]=r.codes;});});
 }
-function csvLine(l){
+
+function splitCSV(l){
   const res=[];let c='',q=false;
   for(let i=0;i<l.length;i++){
     if(l[i]==='"')q=!q;
-    else if(l[i]===','&&!q){res.push(c.trim());c='';}
+    else if((l[i]===','||l[i]==='\t')&&!q){res.push(c);c='';}
     else c+=l[i];
   }
-  res.push(c.trim());return res;
-}
-function buildCodesMap(){
-  codesMap={};
-  allData.forEach(r=>{
-    if(!codesMap[r.dist])codesMap[r.dist]={};
-    codesMap[r.dist][r.semana]=r.codes;
-  });
+  res.push(c);return res;
 }
 
-// ── HELPERS ───────────────────────────────────────────────────
-function isPromo(s){return s.idate<=PROMO_END&&s.fdate>=PROMO_START;}
-function getFiltered(){return currentRange==='all'?allSemanas:allSemanas.slice(-parseInt(currentRange));}
-function totalDist(d){return allSemanas.reduce((a,s)=>a+(codesMap[d]?.[s.semana]||0),0);}
-function totalSem(s){return allDist.reduce((a,d)=>a+(codesMap[d]?.[s.semana]||0),0);}
+function get(d,s){return cmap[d]?.[s.sem]||0;}
+function totalDist(d){return semanas.reduce((a,s)=>a+get(d,s),0);}
+function totalSem(s){return dists.reduce((a,d)=>a+get(d,s),0);}
 function fmt(n){return Math.round(n).toLocaleString('es-CO');}
-function pct(a,b){return b===0?'—':(((a-b)/b)*100).toFixed(1)+'%';}
-function arrow(n){return n>0?'▲':'▼';}
-function sign(n){return n>=0?'+':'';}
 
-// ── RENDER ────────────────────────────────────────────────────
-function render(){
+function build(){
   const now=new Date();
-  const ts=now.toLocaleDateString('es-CO',{day:'2-digit',month:'long',year:'numeric'});
-  const ts2=now.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'});
-  document.getElementById('upd').textContent='Actualizado: '+ts+' · '+ts2;
+  const ts=now.toLocaleDateString('es-CO',{day:'2-digit',month:'short',year:'numeric'})+' · '+now.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'});
+  document.getElementById('upd-ts').textContent=ts;
   document.getElementById('footer-ts').textContent='Fuente: Google Sheets · '+ts;
 
-  // COVER
-  const firstSem=allSemanas[0]||null, lastSem=allSemanas[allSemanas.length-1]||null;
-  document.getElementById('cover-date').textContent='Generado: '+ts;
-  document.getElementById('cover-period').textContent=
-    firstSem&&lastSem?`${firstSem.idate} → ${lastSem.fdate}`:'—';
+  const grandTotal=dists.reduce((a,d)=>a+totalDist(d),0);
+  const avgSem=semanas.length?grandTotal/semanas.length:0;
+  document.getElementById('h-total').textContent=fmt(grandTotal);
+  document.getElementById('h-semanas').textContent=semanas.length;
+  document.getElementById('h-avg').textContent=fmt(avgSem);
 
-  renderKPIs();
-  renderHallazgos();
-  renderRanking();
+  const first=semanas[0], last=semanas[semanas.length-1];
+  document.getElementById('hero-periodo').textContent=
+    (first?first.idate:'—')+' → '+(last?last.fdate:'—')+
+    ' · '+semanas.length+' semanas registradas · Campaña de abril pendiente';
+
+  renderVeredictos(grandTotal,avgSem);
+  renderRanking(grandTotal);
   renderLegend();
   renderChart();
   renderChartInsights();
   renderPromo();
-  renderTable();
-  renderTableInsights();
 }
 
-// ── KPIs ──────────────────────────────────────────────────────
-function renderKPIs(){
-  const total=allDist.reduce((a,d)=>a+totalDist(d),0);
-  const avg=allSemanas.length?total/allSemanas.length:0;
-  const sorted=[...allDist].sort((a,b)=>totalDist(b)-totalDist(a));
-  const leader=sorted[0]||'—';
+// ── VEREDICTOS ────────────────────────────────────────────────
+function renderVeredictos(grandTotal, avgSem){
+  const sorted=[...dists].sort((a,b)=>totalDist(b)-totalDist(a));
+  const leader=sorted[0];
+  const leaderPct=(totalDist(leader)/grandTotal*100).toFixed(0);
 
-  // Semana pico total
-  let peakSem=allSemanas[0], peakVal=0;
-  allSemanas.forEach(s=>{const v=totalSem(s);if(v>peakVal){peakVal=v;peakSem=s;}});
+  // Tendencia: promedio últimas 4 vs primeras 4 semanas
+  const n4first=semanas.slice(0,4), n4last=semanas.slice(-4);
+  const avgFirst=n4first.reduce((a,s)=>a+totalSem(s),0)/4;
+  const avgLast=n4last.reduce((a,s)=>a+totalSem(s),0)/4;
+  const trendPct=((avgLast-avgFirst)/avgFirst*100);
+  const trendDir=trendPct>=0?'Crecimiento':'Descenso';
 
-  // Semana promo
-  const promoSem=allSemanas.find(isPromo);
-  const promoTotal=promoSem?totalSem(promoSem):null;
-  // Promedio de 4 semanas previas a promo
-  let promoBase=null;
-  if(promoSem){
-    const idx=allSemanas.indexOf(promoSem);
-    const prev=allSemanas.slice(Math.max(0,idx-4),idx);
-    if(prev.length)promoBase=prev.reduce((a,s)=>a+totalSem(s),0)/prev.length;
-  }
-  const promoDelta=promoTotal!==null&&promoBase?((promoTotal-promoBase)/promoBase*100):null;
+  // SAI inactivo
+  const saiTotal=totalDist('SAI');
+  const activeDists=dists.filter(d=>totalDist(d)>0).length;
 
-  const kpis=[
-    {cls:'red',label:'Total códigos 2026',val:fmt(total),sub:`${allSemanas.length} semanas registradas`},
-    {cls:'',label:'Semanas registradas',val:allSemanas.length,sub:allSemanas.length>0?`${allSemanas[0].idate} → ${allSemanas[allSemanas.length-1].fdate}`:''},
-    {cls:'',label:'Promedio semanal',val:fmt(avg),sub:'códigos por semana'},
-    {cls:'',label:'Semana pico',val:fmt(peakVal),sub:peakSem?peakSem.semana:'—'},
-    {cls:'',label:'Distribuidor líder',val:leader,sub:leader?fmt(totalDist(leader))+' códigos totales':''},
-    promoDelta!==null
-      ?{cls:promoDelta>=0?'green':'red',label:'Variación en promoción',
-        val:(promoDelta>=0?'+':'')+promoDelta.toFixed(1)+'%',
-        sub:'vs promedio 4 sem. previas'}
-      :{cls:'promo',label:'Semana promoción',val:'Pendiente',sub:'25–30 abril 2026'},
-  ];
-
-  document.getElementById('kpi-row').innerHTML=kpis.map(k=>`
-    <div class="kpi ${k.cls}">
-      <div class="kpi-accent"></div>
-      <div class="kpi-label">${k.label}</div>
-      <div class="kpi-val ${k.cls}">${k.val}</div>
-      <div class="kpi-sub">${k.sub}</div>
-    </div>`).join('');
-}
-
-// ── HALLAZGOS GENERALES ───────────────────────────────────────
-function renderHallazgos(){
-  const insights=[];
-  const sorted=[...allDist].sort((a,b)=>totalDist(b)-totalDist(a));
-  const leader=sorted[0], last=sorted[sorted.length-1];
-
-  // 1. Líder
-  if(leader){
-    const share=(totalDist(leader)/allDist.reduce((a,d)=>a+totalDist(d),0)*100).toFixed(1);
-    insights.push({icon:'🏆',cls:'red',label:'Distribuidor líder',
-      text:`<strong>${leader}</strong> concentra el <strong>${share}%</strong> del total de códigos registrados en 2026, posicionándose como el canal más activo del programa.`});
-  }
-
-  // 2. Tendencia de las últimas 2 semanas
-  if(allSemanas.length>=2){
-    const s1=allSemanas[allSemanas.length-2], s2=allSemanas[allSemanas.length-1];
-    const v1=totalSem(s1), v2=totalSem(s2);
-    const delta=v2-v1, deltaPct=(v1>0?(delta/v1*100):0).toFixed(1);
-    const dir=delta>=0?'incremento':'caída';
-    const cls=delta>=0?'green':'red';
-    insights.push({icon:delta>=0?'📈':'📉',cls,label:'Tendencia reciente',
-      text:`En la última semana registrada (<strong>${s2.semana}</strong>) hubo un <strong>${dir} del ${Math.abs(deltaPct)}%</strong> respecto a la semana anterior (${fmt(v1)} → ${fmt(v2)} códigos totales).`});
-  }
-
-  // 3. Distribuidor más constante (menor coeficiente de variación)
-  if(allSemanas.length>=3){
-    let bestDist=null, bestCV=Infinity;
-    allDist.forEach(d=>{
-      const vals=allSemanas.map(s=>codesMap[d]?.[s.semana]||0);
-      const mean=vals.reduce((a,b)=>a+b,0)/vals.length;
-      if(mean===0) return;
-      const std=Math.sqrt(vals.reduce((a,v)=>a+(v-mean)**2,0)/vals.length);
-      const cv=std/mean;
-      if(cv<bestCV){bestCV=cv;bestDist=d;}
-    });
-    if(bestDist) insights.push({icon:'📊',cls:'blue',label:'Mayor consistencia',
-      text:`<strong>${bestDist}</strong> es el distribuidor con el comportamiento más estable semana a semana, con una variación relativa del <strong>${(bestCV*100).toFixed(0)}%</strong> entre semanas.`});
-  }
-
-  // 4. Semana pico
-  let peakSem=allSemanas[0], peakVal=0, peakDist='';
-  allSemanas.forEach(s=>{
-    allDist.forEach(d=>{
-      const v=codesMap[d]?.[s.semana]||0;
-      if(v>peakVal){peakVal=v;peakSem=s;peakDist=d;}
-    });
-  });
-  if(peakSem) insights.push({icon:'⚡',cls:'orange',label:'Semana y distribuidor pico',
-    text:`El mayor ingreso individual fue de <strong>${fmt(peakVal)} códigos</strong> registrado por <strong>${peakDist}</strong> en <strong>${peakSem.semana}</strong> (${peakSem.idate} → ${peakSem.fdate}).`});
-
-  // 5. Distribuidor rezagado
-  if(last&&last!==sorted[0]){
-    insights.push({icon:'⚠️',cls:'gray',label:'Distribuidor con menor actividad',
-      text:`<strong>${last}</strong> registra el menor acumulado con <strong>${fmt(totalDist(last))} códigos</strong>, representando solo el ${(totalDist(last)/allDist.reduce((a,d)=>a+totalDist(d),0)*100).toFixed(1)}% del total.`});
-  }
-
-  // 6. Volumen total vs semanas
-  const total=allDist.reduce((a,d)=>a+totalDist(d),0);
-  const avg=allSemanas.length?total/allSemanas.length:0;
-  if(allSemanas.length>=4){
-    const recent=allSemanas.slice(-4);
-    const recentAvg=recent.reduce((a,s)=>a+totalSem(s),0)/4;
-    const diff=((recentAvg-avg)/avg*100).toFixed(1);
-    const dir=recentAvg>=avg?'por encima':'por debajo';
-    insights.push({icon:'📅',cls:recentAvg>=avg?'green':'red',label:'Ritmo reciente vs histórico',
-      text:`Las últimas 4 semanas promedian <strong>${fmt(recentAvg)} códigos</strong>, un <strong>${Math.abs(diff)}% ${dir}</strong> del promedio histórico de todo el año (${fmt(avg)} códigos/semana).`});
-  }
-
-  document.getElementById('hallazgos-gen').innerHTML=insights.map(h=>`
-    <div class="hallazgo">
-      <div class="h-icon ${h.cls}">${h.icon}</div>
-      <div class="h-body">
-        <div class="h-label">${h.label}</div>
-        <div class="h-text">${h.text}</div>
-      </div>
-    </div>`).join('');
+  document.getElementById('veredicto').innerHTML=`
+    <div class="v-card green">
+      <div class="v-pregunta">¿Quién jala el programa?</div>
+      <div class="v-respuesta">${leader} lidera con ${leaderPct}%</div>
+      <div class="v-detalle">${leader} acumula <strong>${fmt(totalDist(leader))} códigos</strong> — casi ${leaderPct}% del total del programa. El segundo lugar, ${sorted[1]}, tiene ${fmt(totalDist(sorted[1]))} (${(totalDist(sorted[1])/grandTotal*100).toFixed(0)}%).</div>
+    </div>
+    <div class="v-card ${trendPct>=0?'green':'red'}">
+      <div class="v-pregunta">¿El programa crece o decrece?</div>
+      <div class="v-respuesta">${trendDir} de ${Math.abs(trendPct).toFixed(0)}% en el año</div>
+      <div class="v-detalle">Las primeras 4 semanas promediaron <strong>${fmt(avgFirst)} códigos/sem</strong>. Las últimas 4, <strong>${fmt(avgLast)} códigos/sem</strong>. Tendencia ${trendPct>=0?'positiva':'a la baja'} del ${Math.abs(trendPct).toFixed(1)}%.</div>
+    </div>
+    <div class="v-card amber">
+      <div class="v-pregunta">¿Campaña de abril impactó?</div>
+      <div class="v-respuesta">Datos pendientes de registro</div>
+      <div class="v-detalle">La campaña del <strong>25 al 30 de abril</strong> aún no aparece en el sistema. Solo hay <strong>${activeDists} de ${dists.length} distribuidores activos</strong> — SAI lleva 0 códigos en todas las semanas.</div>
+    </div>`;
 }
 
 // ── RANKING ───────────────────────────────────────────────────
-function renderRanking(){
-  const sorted=[...allDist].sort((a,b)=>totalDist(b)-totalDist(a));
+function renderRanking(grandTotal){
+  const sorted=[...dists].filter(d=>d!=='SAI').sort((a,b)=>totalDist(b)-totalDist(a));
   const max=totalDist(sorted[0])||1;
-  const medals=['1°','2°','3°','4°','5°','6°'];
 
-  // Delta vs semana anterior por distribuidor
-  function distDelta(d){
-    if(allSemanas.length<2) return null;
-    const s1=allSemanas[allSemanas.length-2], s2=allSemanas[allSemanas.length-1];
-    const v1=codesMap[d]?.[s1.semana]||0, v2=codesMap[d]?.[s2.semana]||0;
-    return {v1,v2,delta:v2-v1,pct:v1>0?((v2-v1)/v1*100).toFixed(1):null};
+  // Delta última semana vs penúltima por dist
+  function delta(d){
+    if(semanas.length<2) return null;
+    const v1=get(d,semanas[semanas.length-2]), v2=get(d,semanas[semanas.length-1]);
+    return {v1,v2,pct:v1>0?((v2-v1)/v1*100):null};
   }
 
-  document.getElementById('ranking-grid').innerHTML=sorted.map((d,i)=>{
-    const color=DIST_COLORS[d]||'#888';
+  let html='';
+  sorted.forEach((d,i)=>{
     const tot=totalDist(d);
-    const pctBar=Math.round(tot/max*100);
-    const dd=distDelta(d);
-    let deltaHtml='';
+    const pct=(tot/grandTotal*100).toFixed(0);
+    const fill=Math.round(tot/max*100);
+    const color=COLORS[d]||'#888';
+    const dd=delta(d);
+    let dHtml='';
     if(dd&&dd.pct!==null){
-      const cls=dd.delta>=0?'up':'down';
-      deltaHtml=`<div class="rank-delta ${cls}">${arrow(dd.delta)} ${Math.abs(dd.pct)}% vs sem. anterior</div>`;
+      const up=dd.v2>=dd.v1;
+      dHtml=`<div style="font-size:10px;margin-top:5px;color:${up?'var(--green)':'var(--red)'};">${up?'▲':'▼'} ${Math.abs(dd.pct).toFixed(0)}% vs sem. ant.</div>`;
     }
-    return `<div class="rank-card">
-      <div class="rank-top" style="background:${color}"></div>
-      <div class="rank-num">${medals[i]}</div>
+    html+=`<div class="rank-card">
+      <div class="rank-pos">${i+1}° lugar</div>
       <div class="rank-name" style="color:${color}">${d}</div>
       <div class="rank-val">${fmt(tot)}</div>
-      <div class="rank-lbl">códigos totales</div>
-      <div class="rank-bar-wrap"><div class="rank-bar" style="width:${pctBar}%;background:${color}"></div></div>
-      ${deltaHtml}
+      <div class="rank-pct">${pct}% del total</div>
+      <div class="rank-bar"><div class="rank-fill" style="width:${fill}%;background:${color}"></div></div>
+      ${dHtml}
     </div>`;
-  }).join('');
+  });
+
+  // SAI siempre aparte
+  html+=`<div class="rank-card inactivo">
+    <div class="rank-pos">Sin actividad</div>
+    <div class="rank-name">SAI</div>
+    <div class="rank-val">0</div>
+    <div class="rank-pct">0 códigos en 13 sem.</div>
+    <div class="rank-bar"><div class="rank-fill" style="width:0%"></div></div>
+    <div class="rank-alerta">⚠ Revisar activación</div>
+  </div>`;
+
+  document.getElementById('ranking').innerHTML=html;
 }
 
 // ── LEGEND + CHART ────────────────────────────────────────────
 function renderLegend(){
-  const leg=document.getElementById('legend');
-  const promoHtml=`<div class="promo-leg"><div class="promo-swatch"></div>Semana promoción 25–30 abr</div>`;
-  const distHtml=allDist.map(d=>`
-    <span class="legend-item ${activeSet.has(d)?'':'inactive'}" data-dist="${d}" onclick="toggleDist('${d}')">
-      <span class="legend-line" style="background:${DIST_COLORS[d]||'#888'}"></span>${d}
+  document.getElementById('legend').innerHTML=
+    `<div class="promo-leg">▧ Semana campaña abr</div>`+
+    dists.map(d=>`<span class="leg-item ${active.has(d)?'':'off'}" data-d="${d}" onclick="tog('${d}')">
+      <span class="leg-line" style="background:${COLORS[d]||'#888'}"></span>${d}
     </span>`).join('');
-  leg.innerHTML=promoHtml+distHtml;
 }
 
-function toggleDist(d){
-  if(activeSet.has(d)){if(activeSet.size>1)activeSet.delete(d);}
-  else activeSet.add(d);
-  document.querySelectorAll('.legend-item[data-dist]').forEach(el=>{
-    el.classList.toggle('inactive',!activeSet.has(el.dataset.dist));
-  });
+function tog(d){
+  if(active.has(d)){if(active.size>1)active.delete(d);}else active.add(d);
+  document.querySelectorAll('.leg-item[data-d]').forEach(el=>el.classList.toggle('off',!active.has(el.dataset.d)));
   renderChart();
 }
 
-function setRange(r,btn){
-  currentRange=r;
-  document.querySelectorAll('.btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  renderChart();
-}
+function isPromo(s){return s.idate<=PROMO_END&&s.fdate>=PROMO_START;}
 
 function renderChart(){
-  const semanas=getFiltered();
-  const labels=semanas.map(s=>`S${s.numSem}`);
-
   const promoPlugin={
-    id:'promoShade',
-    beforeDraw(chart){
-      const{ctx,chartArea,scales}=chart;
+    id:'ps',
+    beforeDraw(c){
+      const{ctx,chartArea:ca,scales:{x}}=c;
       semanas.forEach((s,i)=>{
         if(!isPromo(s))return;
-        const x=scales.x;
-        const x0=x.getPixelForValue(i-.5), x1=x.getPixelForValue(i+.5);
+        const x0=x.getPixelForValue(i-.5),x1=x.getPixelForValue(i+.5);
         ctx.save();
-        ctx.fillStyle='rgba(224,120,0,0.10)';
-        ctx.fillRect(x0,chartArea.top,x1-x0,chartArea.bottom-chartArea.top);
-        ctx.strokeStyle='rgba(224,120,0,0.35)';
-        ctx.setLineDash([4,3]); ctx.lineWidth=1;
-        ctx.beginPath();
-        ctx.moveTo(x0,chartArea.top);ctx.lineTo(x0,chartArea.bottom);
-        ctx.moveTo(x1,chartArea.top);ctx.lineTo(x1,chartArea.bottom);
-        ctx.stroke();
-        ctx.fillStyle='rgba(224,120,0,0.65)';
-        ctx.font='bold 10px Barlow Condensed,sans-serif';
-        ctx.textAlign='center';
-        ctx.setLineDash([]);
-        ctx.fillText('PROMO',(x0+x1)/2,chartArea.top+12);
+        ctx.fillStyle='rgba(245,158,11,0.12)';
+        ctx.fillRect(x0,ca.top,x1-x0,ca.bottom-ca.top);
+        ctx.setLineDash([4,3]);ctx.strokeStyle='rgba(245,158,11,.4)';ctx.lineWidth=1;
+        ctx.beginPath();ctx.moveTo(x0,ca.top);ctx.lineTo(x0,ca.bottom);
+        ctx.moveTo(x1,ca.top);ctx.lineTo(x1,ca.bottom);ctx.stroke();
+        ctx.setLineDash([]);ctx.fillStyle='rgba(245,158,11,.7)';
+        ctx.font='bold 9px Barlow Condensed,sans-serif';ctx.textAlign='center';
+        ctx.fillText('PROMO',(x0+x1)/2,ca.top+10);
         ctx.restore();
       });
     }
   };
 
-  const datasets=allDist.filter(d=>activeSet.has(d)).map(d=>({
+  const datasets=dists.filter(d=>active.has(d)).map(d=>({
     label:d,
-    data:semanas.map(s=>codesMap[d]?.[s.semana]||0),
-    borderColor:DIST_COLORS[d]||'#888',
-    backgroundColor:(DIST_COLORS[d]||'#888')+'10',
-    borderWidth:2.5,
-    pointRadius:5,
-    pointHoverRadius:8,
-    pointBackgroundColor:DIST_COLORS[d]||'#888',
-    pointBorderColor:'#fff',
-    pointBorderWidth:1.5,
-    tension:.35,fill:false,
-    borderDash:DIST_DASH[d]||[],
+    data:semanas.map(s=>get(d,s)),
+    borderColor:COLORS[d]||'#888',
+    backgroundColor:(COLORS[d]||'#888')+'12',
+    borderWidth:2,
+    pointRadius:4,pointHoverRadius:7,
+    pointBackgroundColor:COLORS[d]||'#888',
+    pointBorderColor:'#fff',pointBorderWidth:1.5,
+    tension:.3,fill:false,
+    borderDash:DASHES[d]||[],
   }));
 
-  const ctx=document.getElementById('mainChart').getContext('2d');
-  if(chart)chart.destroy();
-  chart=new Chart(ctx,{
-    type:'line',data:{labels,datasets},
+  const ctx=document.getElementById('chart').getContext('2d');
+  if(chartInst)chartInst.destroy();
+  chartInst=new Chart(ctx,{
+    type:'line',data:{labels:semanas.map(s=>'S'+s.num),datasets},
     plugins:[promoPlugin],
     options:{
-      responsive:true,maintainAspectRatio:false,animation:{duration:400},
+      responsive:true,maintainAspectRatio:false,
       plugins:{
         legend:{display:false},
-        promoShade:{},
         tooltip:{
-          backgroundColor:'#fff',borderColor:'#E2E2E2',borderWidth:1,
-          titleColor:'#E31837',bodyColor:'#555',
+          backgroundColor:'#fff',borderColor:'#E4E4E4',borderWidth:1,
+          titleColor:'#E31837',bodyColor:'#555',padding:10,
           titleFont:{family:"'Barlow Condensed',sans-serif",size:13,weight:700},
           bodyFont:{family:"'Barlow',sans-serif",size:12},
-          padding:12,
           callbacks:{
-            title:items=>{
-              const s=semanas[items[0].dataIndex];
-              return `${s.semana}  ${s.idate} → ${s.fdate}${isPromo(s)?' · 🟠 PROMO':''}`;
-            },
-            label:item=>` ${item.dataset.label}: ${fmt(item.parsed.y)} códigos`
+            title:it=>{const s=semanas[it[0].dataIndex];return 'S'+s.num+' · '+s.idate+' → '+s.fdate+(isPromo(s)?' · CAMPAÑA':'');},
+            label:it=>` ${it.dataset.label}: ${fmt(it.parsed.y)} códigos`
           }
         }
       },
       scales:{
-        x:{ticks:{color:'#aaa',font:{family:"'Barlow Condensed'",size:12},autoSkip:false,maxRotation:45},
-           grid:{color:'rgba(0,0,0,0.04)'},border:{color:'#eee'}},
-        y:{beginAtZero:true,ticks:{color:'#aaa',font:{size:11},stepSize:1},
-           grid:{color:'rgba(0,0,0,0.04)'},border:{color:'#eee'}}
+        x:{ticks:{color:'#aaa',font:{family:"'Barlow Condensed'",size:12},autoSkip:false,maxRotation:45},grid:{color:'rgba(0,0,0,0.04)'},border:{color:'#eee'}},
+        y:{beginAtZero:true,ticks:{color:'#aaa',font:{size:11}},grid:{color:'rgba(0,0,0,0.04)'},border:{color:'#eee'}}
       }
     }
   });
-  document.getElementById('chart-sub').textContent=
-    `Año 2026 · ${semanas.length} semana(s) · ${semanas[0]?.idate||''} → ${semanas[semanas.length-1]?.fdate||''}`;
+  document.getElementById('chart-sub').textContent=`S1 (5 ene) → S${semanas.length} (${semanas[semanas.length-1]?.fdate||''}) · Pasa el cursor sobre la gráfica para ver el detalle`;
 }
 
 // ── CHART INSIGHTS ─────────────────────────────────────────────
 function renderChartInsights(){
   const items=[];
 
-  // Tendencia visual: ¿la línea total sube o baja?
-  if(allSemanas.length>=4){
-    const first2=allSemanas.slice(0,2).reduce((a,s)=>a+totalSem(s),0)/2;
-    const last2=allSemanas.slice(-2).reduce((a,s)=>a+totalSem(s),0)/2;
-    const trend=last2-first2;
-    const tpct=(first2>0?(trend/first2*100):0).toFixed(1);
-    const dir=trend>=0?'crecimiento':'descenso';
-    items.push({cls:trend>=0?'green':'',
-      text:`La tendencia general del programa muestra un <strong>${dir} del ${Math.abs(tpct)}%</strong> comparando el promedio de las primeras 2 semanas (${fmt(first2)}) con las últimas 2 (${fmt(last2)}).`});
+  // Semana pico total
+  const picSem=semanas.reduce((a,s)=>totalSem(s)>totalSem(a)?s:a);
+  const picVal=totalSem(picSem);
+  items.push({c:'r',t:`La semana de mayor actividad fue <strong>S${picSem.num} (${picSem.idate})</strong> con <strong>${fmt(picVal)} códigos</strong> en total entre todos los distribuidores.`});
+
+  // COSTAOIL consistente arriba
+  const coTots=semanas.map(s=>get('COSTAOIL',s));
+  const coTop=coTots.filter(v=>v===Math.max(...coTots)).length;
+  const coRankedFirst=semanas.filter(s=>
+    dists.every(d=>d==='COSTAOIL'||get('COSTAOIL',s)>=get(d,s))
+  ).length;
+  items.push({c:'g',t:`<strong>COSTAOIL</strong> fue el distribuidor líder en <strong>${coRankedFirst} de ${semanas.length} semanas</strong>, mostrando la mayor consistencia del programa.`});
+
+  // Caída S6 y recuperación
+  const s5=semanas.find(s=>s.num===5), s6=semanas.find(s=>s.num===6);
+  if(s5&&s6){
+    const drop=((totalSem(s6)-totalSem(s5))/totalSem(s5)*100).toFixed(0);
+    items.push({c:'a',t:`Se observa una caída notable en <strong>S6 (9 feb)</strong>: el total bajó ${Math.abs(drop)}% respecto a la semana anterior. Comportamiento puntual que no afectó la tendencia general.`});
   }
 
-  // Distribuidor con mayor crecimiento entre primera y última semana
-  if(allSemanas.length>=2){
-    const s1=allSemanas[0], sN=allSemanas[allSemanas.length-1];
-    let bestGrowth=null, bestGrowthDist='';
-    allDist.forEach(d=>{
-      const v1=codesMap[d]?.[s1.semana]||0, vN=codesMap[d]?.[sN.semana]||0;
-      if(v1>0){
-        const g=(vN-v1)/v1*100;
-        if(bestGrowth===null||g>bestGrowth){bestGrowth=g;bestGrowthDist=d;}
-      }
-    });
-    if(bestGrowthDist&&bestGrowth!==null)
-      items.push({cls:bestGrowth>=0?'green':'',
-        text:`<strong>${bestGrowthDist}</strong> es el distribuidor con ${bestGrowth>=0?'mayor crecimiento':'mayor caída'} entre la primera y última semana registrada: <strong>${sign(bestGrowth)}${bestGrowth.toFixed(1)}%</strong>.`});
+  // DLO recuperación reciente
+  const dloS11=get('DLO',semanas[10]), dloS13=get('DLO',semanas[12]);
+  if(dloS11&&dloS13&&dloS11<dloS13){
+    const rec=((dloS13-dloS11)/dloS11*100).toFixed(0);
+    items.push({c:'g',t:`<strong>DLO</strong> muestra una fuerte recuperación en las últimas semanas: pasó de ${fmt(dloS11)} códigos (S11) a <strong>${fmt(dloS13)} códigos (S13)</strong>, un incremento del ${rec}%.`});
   }
 
-  // Semana con mayor caída interanual
-  if(allSemanas.length>=2){
-    let maxDrop=0, dropSem=null;
-    for(let i=1;i<allSemanas.length;i++){
-      const v1=totalSem(allSemanas[i-1]), v2=totalSem(allSemanas[i]);
-      const drop=v1-v2;
-      if(drop>maxDrop){maxDrop=drop;dropSem=allSemanas[i];}
-    }
-    if(dropSem)
-      items.push({cls:'',
-        text:`La mayor caída semanal ocurrió en <strong>${dropSem.semana}</strong> (${dropSem.idate}), con una reducción de <strong>${fmt(maxDrop)} códigos</strong> respecto a la semana anterior.`});
-  }
-
-  // Consistencia colectiva
-  const weekTotals=allSemanas.map(totalSem);
-  if(weekTotals.length>1){
-    const mean=weekTotals.reduce((a,b)=>a+b,0)/weekTotals.length;
-    const std=Math.sqrt(weekTotals.reduce((a,v)=>a+(v-mean)**2,0)/weekTotals.length);
-    const cv=(std/mean*100).toFixed(0);
-    const stability=cv<20?'alta estabilidad':cv<40?'variabilidad moderada':'alta variabilidad';
-    items.push({cls:'blue',
-      text:`El programa en conjunto muestra <strong>${stability}</strong> (CV: ${cv}%), con semanas entre <strong>${fmt(Math.min(...weekTotals))}</strong> y <strong>${fmt(Math.max(...weekTotals))}</strong> códigos totales.`});
-  }
-
-  document.getElementById('chart-insights-list').innerHTML=items.map(it=>
-    `<div class="ci-item"><div class="ci-dot ${it.cls||''}"></div><div>${it.text}</div></div>`
+  document.getElementById('chart-insights').innerHTML=items.map(i=>
+    `<div class="insight-row"><div class="i-dot ${i.c}"></div><div>${i.t}</div></div>`
   ).join('');
 }
 
 // ── PROMO ─────────────────────────────────────────────────────
 function renderPromo(){
-  const promoSem=allSemanas.find(isPromo);
-  const sec=document.getElementById('promo-section');
+  const promoSem=semanas.find(isPromo);
+  const avgTotal=dists.reduce((a,d)=>a+totalDist(d),0)/semanas.length;
 
-  if(!promoSem){
-    sec.innerHTML=`<div class="promo-header">
-      <div class="promo-icon">🟠</div>
-      <div><div class="promo-htitle">Campaña 25–30 Abril 2026</div>
-      <div class="promo-hsub">La semana de promoción aún no ha sido registrada en el sistema.</div></div>
-    </div>`;
-    return;
-  }
+  // Promedio de las 4 semanas más recientes como baseline
+  const base4=semanas.slice(-4);
+  const baseAvg=base4.reduce((a,s)=>a+totalSem(s),0)/4;
 
-  const promoTotal=totalSem(promoSem);
-  const idx=allSemanas.indexOf(promoSem);
-  const prevSems=allSemanas.slice(Math.max(0,idx-4),idx);
-  const prevAvg=prevSems.length?prevSems.reduce((a,s)=>a+totalSem(s),0)/prevSems.length:0;
-  const delta=promoTotal-prevAvg;
-  const deltaPct=prevAvg>0?(delta/prevAvg*100):0;
-  const isUp=delta>=0;
-
-  // Mejor distribuidor en semana promo
-  const distPromo=[...allDist].sort((a,b)=>
-    (codesMap[b]?.[promoSem.semana]||0)-(codesMap[a]?.[promoSem.semana]||0));
-  const topPromo=distPromo[0];
-  const topPromoVal=codesMap[topPromo]?.[promoSem.semana]||0;
-
-  // Distribuidor con mayor variación en promo vs su propio promedio
-  let maxImpact=null, maxImpactDist='';
-  allDist.forEach(d=>{
-    const vPromo=codesMap[d]?.[promoSem.semana]||0;
-    const prevD=prevSems.map(s=>codesMap[d]?.[s.semana]||0);
-    const avgD=prevD.length?prevD.reduce((a,b)=>a+b,0)/prevD.length:0;
-    if(avgD>0){
-      const imp=(vPromo-avgD)/avgD*100;
-      if(maxImpact===null||Math.abs(imp)>Math.abs(maxImpact)){maxImpact=imp;maxImpactDist=d;}
-    }
-  });
-
-  sec.innerHTML=`
-    <div class="promo-header">
-      <div class="promo-icon">🟠</div>
-      <div>
-        <div class="promo-htitle">Campaña 25–30 Abril 2026 · ${promoSem.semana}</div>
-        <div class="promo-hsub">${promoSem.idate} → ${promoSem.fdate} · Datos registrados en sistema</div>
-      </div>
-    </div>
-    <div class="promo-stats">
-      <div class="promo-stat">
-        <div class="ps-label">Total en semana promo</div>
-        <div class="ps-val">${fmt(promoTotal)}</div>
-        <div class="ps-sub">códigos registrados</div>
-      </div>
-      <div class="promo-stat">
-        <div class="ps-label">Promedio 4 sem. previas</div>
-        <div class="ps-val">${fmt(prevAvg)}</div>
-        <div class="ps-sub">línea base de comparación</div>
-      </div>
-      <div class="promo-stat">
-        <div class="ps-label">Variación vs base</div>
-        <div class="ps-val" style="color:${isUp?'var(--green)':'var(--red)'}">${isUp?'+':''}${deltaPct.toFixed(1)}%</div>
-        <div class="ps-sub">${isUp?'incremento':'descenso'} de ${fmt(Math.abs(delta))} códigos</div>
-      </div>
-      <div class="promo-stat">
-        <div class="ps-label">Líder en semana promo</div>
-        <div class="ps-val" style="font-size:18px;padding-top:4px">${topPromo}</div>
-        <div class="ps-sub">${fmt(topPromoVal)} códigos en la semana</div>
-      </div>
-    </div>
-    <div class="promo-insight">
-      ${isUp
-        ? `La campaña del <strong>25 al 30 de abril</strong> generó un <strong>incremento del ${deltaPct.toFixed(1)}%</strong> en el ingreso total de códigos respecto al promedio de las 4 semanas anteriores (${fmt(prevAvg)} → ${fmt(promoTotal)} códigos). `
-        : `Durante la semana de campaña del <strong>25 al 30 de abril</strong>, el ingreso de códigos fue <strong>${Math.abs(deltaPct).toFixed(1)}% menor</strong> al promedio de las 4 semanas previas (${fmt(prevAvg)} → ${fmt(promoTotal)} códigos). `}
-      ${topPromo?`<strong>${topPromo}</strong> lideró la semana con ${fmt(topPromoVal)} códigos. `:''}
-      ${maxImpactDist&&maxImpact!==null?`El distribuidor con mayor variación individual fue <strong>${maxImpactDist}</strong> con un cambio del <strong>${sign(maxImpact)}${maxImpact.toFixed(1)}%</strong> respecto a su propio promedio previo.`:''}
-    </div>`;
+  document.getElementById('promo-panel').innerHTML=promoSem
+  ? `<div class="promo-top"><span class="promo-badge">Campaña activa</span><span class="promo-ttl">Semana detectada en datos</span></div>
+     <div class="promo-pending">Datos de la campaña disponibles — ver gráfica.</div>`
+  : `<div class="promo-top">
+       <span class="promo-badge">Próximamente</span>
+       <span class="promo-ttl">Campaña 25 – 30 de Abril 2026</span>
+     </div>
+     <div class="promo-pending">
+       La semana de campaña <strong>aún no ha sido registrada</strong> en el sistema. 
+       Los datos aparecerán automáticamente aquí una vez que el Apps Script ejecute 
+       la consulta del lunes siguiente al cierre de la campaña.<br><br>
+       <strong>Línea base para medir el impacto:</strong> el promedio de las últimas 4 semanas 
+       registradas es <strong>${fmt(baseAvg)} códigos/semana</strong>. 
+       Cualquier resultado por encima de ese número indicará un efecto positivo de la campaña.
+     </div>
+     <div class="promo-dates">
+       <div class="promo-date-card"><strong>${fmt(baseAvg)}</strong>Baseline (prom. últ. 4 sem.)</div>
+       <div class="promo-date-card"><strong>25 abr</strong>Inicio campaña</div>
+       <div class="promo-date-card"><strong>30 abr</strong>Cierre campaña</div>
+       <div class="promo-date-card"><strong>4 may</strong>Datos disponibles en sistema</div>
+     </div>`;
 }
 
-// ── TABLA ─────────────────────────────────────────────────────
-function renderTable(){
-  const semanas=getFiltered();
-  const head=document.getElementById('table-head');
-  const body=document.getElementById('table-body');
-
-  head.innerHTML=`<th>Distribuidor</th>`+
-    semanas.map(s=>`<th class="${isPromo(s)?'pc':''}" title="${s.idate} → ${s.fdate}">
-      S${s.numSem}${isPromo(s)?' 🟠':''}</th>`).join('')+`<th>Total</th>`;
-
-  body.innerHTML='';
-  const colTotals=semanas.map(()=>0);
-  const sorted=[...allDist].sort((a,b)=>totalDist(b)-totalDist(a));
-
-  sorted.forEach(d=>{
-    const color=DIST_COLORS[d]||'#888';
-    const vals=semanas.map((s,i)=>{
-      const v=codesMap[d]?.[s.semana]||0;
-      colTotals[i]+=v; return{v,promo:isPromo(s)};
-    });
-    const tot=vals.reduce((a,b)=>a+b.v,0);
-    const tr=document.createElement('tr');
-    tr.innerHTML=`<td class="dn" style="color:${color}">${d}</td>`+
-      vals.map(({v,promo})=>`<td class="${promo?'prc':''}">${fmt(v)}</td>`).join('')+
-      `<td class="tc">${fmt(tot)}</td>`;
-    body.appendChild(tr);
-  });
-
-  const grand=colTotals.reduce((a,b)=>a+b,0);
-  document.getElementById('table-foot').innerHTML=`<td>Total</td>`+
-    colTotals.map((v,i)=>`<td class="${isPromo(semanas[i])?'prc':''}">${fmt(v)}</td>`).join('')+
-    `<td class="tc">${fmt(grand)}</td>`;
-}
-
-// ── TABLE INSIGHTS ─────────────────────────────────────────────
-function renderTableInsights(){
-  const items=[];
-
-  // Semana con mayor total en tabla filtrada
-  const semanas=getFiltered();
-  if(semanas.length>0){
-    const peakS=semanas.reduce((a,s)=>totalSem(s)>totalSem(a)?s:a);
-    items.push({cls:'',
-      text:`La semana con mayor ingreso registrado es <strong>${peakS.semana}</strong> (${peakS.idate}) con <strong>${fmt(totalSem(peakS))} códigos</strong> en total entre todos los distribuidores.`});
-  }
-
-  // Distribuidores con 0 en alguna semana
-  const zerosMap={};
-  allDist.forEach(d=>{
-    const zeros=allSemanas.filter(s=>!(codesMap[d]?.[s.semana]));
-    if(zeros.length>0) zerosMap[d]=zeros.length;
-  });
-  const zerosDists=Object.entries(zerosMap).sort((a,b)=>b[1]-a[1]);
-  if(zerosDists.length>0){
-    const names=zerosDists.map(([d,n])=>`<strong>${d}</strong> (${n} sem.)`).join(', ');
-    items.push({cls:'orange',
-      text:`Los siguientes distribuidores tienen semanas sin registros: ${names}. Verificar si corresponde a semanas sin actividad o datos no cargados.`});
-  } else {
-    items.push({cls:'green',
-      text:`Todos los distribuidores tienen registros en todas las semanas del período, sin semanas vacías detectadas.`});
-  }
-
-  // Participación del top 2 vs total
-  const sorted=[...allDist].sort((a,b)=>totalDist(b)-totalDist(a));
-  if(sorted.length>=2){
-    const total=allDist.reduce((a,d)=>a+totalDist(d),0);
-    const top2=totalDist(sorted[0])+totalDist(sorted[1]);
-    const share=(top2/total*100).toFixed(1);
-    items.push({cls:'blue',
-      text:`<strong>${sorted[0]}</strong> y <strong>${sorted[1]}</strong> concentran juntos el <strong>${share}%</strong> del total de códigos del programa. El ${(100-parseFloat(share)).toFixed(1)}% restante se distribuye entre los otros ${allDist.length-2} distribuidores.`});
-  }
-
-  document.getElementById('table-insights-list').innerHTML=items.map(it=>
-    `<div class="ci-item"><div class="ci-dot ${it.cls||''}"></div><div>${it.text}</div></div>`
-  ).join('');
-}
-
-loadCSV();
+init();
 </script>
 </body>
 </html>
