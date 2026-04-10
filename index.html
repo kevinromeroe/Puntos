@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Havoline Moto Club — Dashboard Distribuidores</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  :root {
+    --red: #E31837;
+    --red-dark: #A8102A;
+    --red-light: #ff2244;
+    --black: #0D0D0D;
+    --dark: #1A1A1A;
+    --gray: #2C2C2C;
+    --gray-mid: #444;
+    --gray-light: #888;
+    --white: #FFFFFF;
+    --off-white: #F5F5F5;
+    --border: rgba(255,255,255,0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--dark);
+    border-bottom: 3px solid var(--red);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 72px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo-area {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .logo-mark {
+    width: 44px;
+    height: 44px;
+    background: var(--red);
+    clip-path: polygon(0 0, 100% 0, 85% 100%, 0 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 20px;
+    color: white;
+    letter-spacing: -1px;
+    padding-right: 6px;
+  }
+
+  .logo-text {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    line-height: 1.1;
+  }
+
+  .logo-text span {
+    display: block;
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--gray-light);
+    letter-spacing: 3px;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .last-update {
+    font-size: 11px;
+    color: var(--gray-light);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--red);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.3); }
+  }
+
+  /* MAIN */
+  main { padding: 2rem; max-width: 1400px; margin: 0 auto; }
+
+  /* SECTION TITLE */
+  .section-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* METRICS */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+
+  .metric {
+    background: var(--dark);
+    padding: 1.25rem 1.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.2s;
+  }
+
+  .metric::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--red);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .metric:hover { background: var(--gray); }
+  .metric:hover::before { opacity: 1; }
+
+  .metric-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gray-light);
+    margin-bottom: 8px;
+  }
+
+  .metric-value {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 36px;
+    color: var(--white);
+    line-height: 1;
+  }
+
+  .metric-value.red { color: var(--red); }
+
+  .metric-sub {
+    font-size: 11px;
+    color: var(--gray-light);
+    margin-top: 4px;
+  }
+
+  /* CONTROLS */
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .control-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gray-light);
+  }
+
+  .btn-group { display: flex; gap: 4px; }
+
+  .btn {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border: 1px solid var(--gray-mid);
+    background: transparent;
+    color: var(--gray-light);
+    cursor: pointer;
+    transition: all 0.15s;
+    border-radius: 2px;
+  }
+
+  .btn:hover { border-color: var(--red); color: var(--white); }
+  .btn.active { background: var(--red); border-color: var(--red); color: var(--white); }
+
+  /* CHART CARD */
+  .chart-card {
+    background: var(--dark);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .chart-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .chart-subtitle {
+    font-size: 12px;
+    color: var(--gray-light);
+    margin-top: 2px;
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--gray-light);
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 2px;
+    border: 1px solid transparent;
+    transition: all 0.15s;
+    user-select: none;
+  }
+
+  .legend-item:hover { border-color: var(--border); color: var(--white); }
+  .legend-item.inactive { opacity: 0.3; }
+
+  .legend-line {
+    width: 20px;
+    height: 3px;
+    border-radius: 1px;
+    flex-shrink: 0;
+  }
+
+  /* TABLE */
+  .table-card {
+    background: var(--dark);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: auto;
+    margin-bottom: 2rem;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  thead tr {
+    background: var(--gray);
+    border-bottom: 2px solid var(--red);
+  }
+
+  th {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gray-light);
+    padding: 12px 16px;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  th:first-child { text-align: left; }
+
+  td {
+    padding: 10px 16px;
+    text-align: right;
+    border-bottom: 1px solid var(--border);
+    color: var(--off-white);
+    font-weight: 300;
+  }
+
+  td:first-child { text-align: left; }
+  td.dist-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 1px;
+  }
+
+  td.total-col { font-weight: 500; color: var(--white); }
+
+  tbody tr:hover td { background: var(--gray); }
+  tbody tr:last-child td { border-bottom: none; }
+
+  tfoot tr td {
+    border-top: 2px solid var(--red);
+    border-bottom: none;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--red);
+    background: rgba(227,24,55,0.06);
+  }
+
+  /* LOADING */
+  .loading-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    gap: 1.5rem;
+  }
+
+  .loading-bar-wrap {
+    width: 300px;
+    height: 3px;
+    background: var(--gray);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .loading-bar {
+    height: 100%;
+    background: var(--red);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  .loading-text {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gray-light);
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: var(--gray-light);
+    letter-spacing: 1px;
+    flex-wrap: wrap;
+    gap: 8px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .error-msg {
+    color: var(--red);
+    font-size: 13px;
+    text-align: center;
+    padding: 2rem;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    main { padding: 1rem; }
+    .metric-value { font-size: 28px; }
+    header { padding: 0 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-area">
+    <div class="logo-mark">H</div>
+    <div class="logo-text">
+      Havoline Moto Club
+      <span>Dashboard Distribuidores</span>
+    </div>
+  </div>
+  <div class="header-right">
+    <span class="last-update" id="last-update">Cargando...</span>
+    <div class="status-dot"></div>
+  </div>
+</header>
+
+<main>
+
+  <!-- LOADING -->
+  <div id="loading-section" class="loading-wrap">
+    <div class="loading-text" id="loading-text">Cargando datos...</div>
+    <div class="loading-bar-wrap">
+      <div class="loading-bar" id="loading-bar"></div>
+    </div>
+  </div>
+
+  <!-- CONTENIDO (oculto hasta que cargue) -->
+  <div id="content" style="display:none">
+
+    <div class="section-title">Resumen general</div>
+    <div class="metrics-grid" id="metrics-grid">
+      <div class="metric">
+        <div class="metric-label">Total códigos</div>
+        <div class="metric-value red" id="m-total">—</div>
+        <div class="metric-sub">acumulado 2026</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Semanas registradas</div>
+        <div class="metric-value" id="m-semanas">—</div>
+        <div class="metric-sub">desde S1 · 05 ene</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Distribuidor líder</div>
+        <div class="metric-value red" id="m-lider" style="font-size:22px;padding-top:6px;">—</div>
+        <div class="metric-sub" id="m-lider-val">—</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Prom. semanal</div>
+        <div class="metric-value" id="m-avg">—</div>
+        <div class="metric-sub">códigos / semana</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Última semana</div>
+        <div class="metric-value" id="m-last">—</div>
+        <div class="metric-sub" id="m-last-label">—</div>
+      </div>
+    </div>
+
+    <div class="section-title">Tendencia semanal</div>
+    <div class="chart-card">
+      <div class="chart-header">
+        <div>
+          <div class="chart-title">Códigos registrados por semana</div>
+          <div class="chart-subtitle" id="chart-subtitle">Año 2026 · todos los distribuidores</div>
+        </div>
+        <div>
+          <div class="controls" style="margin-bottom:8px">
+            <span class="control-label">Ver:</span>
+            <div class="btn-group">
+              <button class="btn" onclick="setRange(4)">4 sem</button>
+              <button class="btn" onclick="setRange(8)">8 sem</button>
+              <button class="btn" onclick="setRange(12)">12 sem</button>
+              <button class="btn active" onclick="setRange('all')">Todo</button>
+            </div>
+          </div>
+          <div class="legend" id="legend"></div>
+        </div>
+      </div>
+      <div style="position:relative;width:100%;height:360px;">
+        <canvas id="mainChart" role="img" aria-label="Gráfica de líneas: códigos registrados por distribuidor semana a semana en 2026"></canvas>
+      </div>
+    </div>
+
+    <div class="section-title">Detalle por semana</div>
+    <div class="table-card">
+      <table>
+        <thead><tr id="table-head"></tr></thead>
+        <tbody id="table-body"></tbody>
+        <tfoot><tr id="table-foot"></tr></tfoot>
+      </table>
+    </div>
+
+  </div>
+
+  <div class="error-msg" id="error-msg" style="display:none"></div>
+
+</main>
+
+<footer>
+  <span>Havoline Moto Club · Dashboard Distribuidores · 2026</span>
+  <span id="footer-update">—</span>
+</footer>
+
+<script>
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSOVJP3pCfnV04l0uWUSVZrOGOCyR2JYvEaLrsVKdoChLTG3wapP0I4aVurGrTliVd6WQctsqZCZMLb/pub?output=csv";
+
+const DIST_COLORS = {
+  "COMTEXACO": "#E31837",
+  "COSTAOIL":  "#FF6B35",
+  "OILRED":    "#F5A623",
+  "SAI":       "#7ED321",
+  "SWISSLUB":  "#4A90D9",
+  "DLO":       "#B8B8B8",
+};
+
+const DIST_DASH = {
+  "COMTEXACO": [],
+  "COSTAOIL":  [6,3],
+  "OILRED":    [2,2],
+  "SAI":       [8,3,2,3],
+  "SWISSLUB":  [4,2],
+  "DLO":       [1,1],
+};
+
+let allData = [];
+let allSemanas = [];
+let allDist = [];
+let activeSet = new Set();
+let chart = null;
+let currentRange = 'all';
+
+async function loadCSV() {
+  setLoading("Conectando con Google Sheets...", 10);
+  try {
+    const res = await fetch(CSV_URL + "&t=" + Date.now());
+    if (!res.ok) throw new Error("No se pudo cargar el CSV");
+    const text = await res.text();
+    setLoading("Procesando datos...", 60);
+    parseCSV(text);
+    setLoading("Construyendo dashboard...", 90);
+    await new Promise(r => setTimeout(r, 300));
+    render();
+    setLoading("Listo", 100);
+    setTimeout(() => {
+      document.getElementById('loading-section').style.display = 'none';
+      document.getElementById('content').style.display = 'block';
+    }, 300);
+  } catch(e) {
+    document.getElementById('loading-section').style.display = 'none';
+    document.getElementById('error-msg').style.display = 'block';
+    document.getElementById('error-msg').textContent = `Error al cargar datos: ${e.message}. Verifica que el CSV esté publicado correctamente.`;
+  }
+}
+
+function setLoading(txt, pct) {
+  document.getElementById('loading-text').textContent = txt;
+  document.getElementById('loading-bar').style.width = pct + '%';
+}
+
+function parseCSV(text) {
+  const lines = text.trim().split('\n');
+  const headers = lines[0].split(',').map(h => h.trim().replace(/"/g,''));
+
+  // Detectar columnas clave
+  const iSemana   = headers.findIndex(h => h === 'semana');
+  const iNumSem   = headers.findIndex(h => h === 'numero_semana');
+  const iDist     = headers.findIndex(h => h === 'distribuidor_nombre');
+  const iCodes    = headers.findIndex(h => h === 'registered_codes');
+  const iIdate    = headers.findIndex(h => h === 'idate');
+  const iFdate    = headers.findIndex(h => h === 'fdate');
+
+  const rows = [];
+  for (let i = 1; i < lines.length; i++) {
+    const cols = parseCSVLine(lines[i]);
+    if (cols.length < 3) continue;
+    rows.push({
+      semana:   cols[iSemana]  || '',
+      numSem:   parseInt(cols[iNumSem]) || i,
+      dist:     (cols[iDist]   || '').toUpperCase().trim(),
+      codes:    parseInt(cols[iCodes]) || 0,
+      idate:    cols[iIdate]   || '',
+      fdate:    cols[iFdate]   || '',
+    });
+  }
+
+  allData = rows;
+
+  // Semanas únicas ordenadas por número
+  const semMap = {};
+  rows.forEach(r => {
+    if (!semMap[r.semana]) semMap[r.semana] = { semana: r.semana, numSem: r.numSem, idate: r.idate, fdate: r.fdate };
+  });
+  allSemanas = Object.values(semMap).sort((a,b) => a.numSem - b.numSem);
+
+  // Distribuidores únicos
+  allDist = [...new Set(rows.map(r => r.dist))].filter(Boolean).sort();
+  activeSet = new Set(allDist);
+}
+
+function parseCSVLine(line) {
+  const result = [];
+  let cur = '', inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    if (line[i] === '"') { inQ = !inQ; }
+    else if (line[i] === ',' && !inQ) { result.push(cur.trim()); cur = ''; }
+    else { cur += line[i]; }
+  }
+  result.push(cur.trim());
+  return result;
+}
+
+function getCodesMap() {
+  const map = {};
+  allData.forEach(r => {
+    if (!map[r.dist]) map[r.dist] = {};
+    map[r.dist][r.semana] = r.codes;
+  });
+  return map;
+}
+
+function getFilteredSemanas() {
+  if (currentRange === 'all') return allSemanas;
+  return allSemanas.slice(-parseInt(currentRange));
+}
+
+function render() {
+  const now = new Date();
+  const ts = now.toLocaleDateString('es-CO', { day:'2-digit', month:'short', year:'numeric' }) +
+             ' · ' + now.toLocaleTimeString('es-CO', { hour:'2-digit', minute:'2-digit' });
+  document.getElementById('last-update').textContent = `Actualizado: ${ts}`;
+  document.getElementById('footer-update').textContent = `Fuente: Google Sheets · ${ts}`;
+
+  renderMetrics();
+  renderLegend();
+  renderChart();
+  renderTable();
+}
+
+function renderMetrics() {
+  const codesMap = getCodesMap();
+  let total = 0;
+  const byDist = {};
+  allDist.forEach(d => {
+    byDist[d] = 0;
+    allSemanas.forEach(s => { byDist[d] += codesMap[d]?.[s.semana] || 0; });
+    total += byDist[d];
+  });
+
+  const leader = allDist.reduce((a,b) => byDist[a] >= byDist[b] ? a : b, allDist[0]);
+  const avg = allSemanas.length ? Math.round(total / allSemanas.length) : 0;
+  const lastSem = allSemanas[allSemanas.length - 1];
+  const lastTotal = lastSem ? allDist.reduce((s,d) => s + (codesMap[d]?.[lastSem.semana] || 0), 0) : 0;
+
+  document.getElementById('m-total').textContent = total.toLocaleString('es-CO');
+  document.getElementById('m-semanas').textContent = allSemanas.length;
+  document.getElementById('m-lider').textContent = leader || '—';
+  document.getElementById('m-lider-val').textContent = leader ? byDist[leader].toLocaleString('es-CO') + ' códigos' : '';
+  document.getElementById('m-avg').textContent = avg.toLocaleString('es-CO');
+  document.getElementById('m-last').textContent = lastTotal.toLocaleString('es-CO');
+  document.getElementById('m-last-label').textContent = lastSem ? `${lastSem.semana}` : '—';
+}
+
+function renderLegend() {
+  const leg = document.getElementById('legend');
+  leg.innerHTML = allDist.map(d => {
+    const color = DIST_COLORS[d] || '#888';
+    const active = activeSet.has(d) ? '' : 'inactive';
+    return `<span class="legend-item ${active}" data-dist="${d}" onclick="toggleDist('${d}')">
+      <span class="legend-line" style="background:${color}"></span>${d}
+    </span>`;
+  }).join('');
+}
+
+function toggleDist(d) {
+  if (activeSet.has(d)) {
+    if (activeSet.size > 1) activeSet.delete(d);
+  } else {
+    activeSet.add(d);
+  }
+  document.querySelectorAll('.legend-item').forEach(el => {
+    el.classList.toggle('inactive', !activeSet.has(el.dataset.dist));
+  });
+  renderChart();
+  renderTable();
+}
+
+function setRange(r) {
+  currentRange = r;
+  document.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  renderChart();
+  renderTable();
+}
+
+function renderChart() {
+  const semanas = getFilteredSemanas();
+  const codesMap = getCodesMap();
+  const labels = semanas.map(s => `S${s.numSem}`);
+
+  const datasets = allDist.filter(d => activeSet.has(d)).map(d => {
+    const color = DIST_COLORS[d] || '#888';
+    return {
+      label: d,
+      data: semanas.map(s => codesMap[d]?.[s.semana] || 0),
+      borderColor: color,
+      backgroundColor: color + '15',
+      borderWidth: 2.5,
+      pointRadius: 5,
+      pointHoverRadius: 8,
+      pointBackgroundColor: color,
+      tension: 0.35,
+      fill: false,
+      borderDash: DIST_DASH[d] || [],
+    };
+  });
+
+  const ctx = document.getElementById('mainChart').getContext('2d');
+  if (chart) chart.destroy();
+
+  chart = new Chart(ctx, {
+    type: 'line',
+    data: { labels, datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 400 },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1A1A1A',
+          borderColor: 'rgba(227,24,55,0.4)',
+          borderWidth: 1,
+          titleColor: '#E31837',
+          bodyColor: '#ccc',
+          titleFont: { family: "'Barlow Condensed', sans-serif", size: 13, weight: 700 },
+          bodyFont: { family: "'Barlow', sans-serif", size: 12 },
+          padding: 12,
+          callbacks: {
+            title: items => {
+              const s = semanas[items[0].dataIndex];
+              return `${s.semana} · ${s.idate} → ${s.fdate}`;
+            },
+            label: item => ` ${item.dataset.label}: ${item.parsed.y.toLocaleString('es-CO')} códigos`
+          }
+        }
+      },
+      scales: {
+        x: {
+          ticks: { color: '#666', font: { family: "'Barlow Condensed'", size: 12 }, autoSkip: false, maxRotation: 45 },
+          grid: { color: 'rgba(255,255,255,0.04)' },
+          border: { color: 'rgba(255,255,255,0.1)' }
+        },
+        y: {
+          beginAtZero: true,
+          ticks: { color: '#666', font: { size: 11 }, stepSize: 1 },
+          grid: { color: 'rgba(255,255,255,0.04)' },
+          border: { color: 'rgba(255,255,255,0.1)' }
+        }
+      }
+    }
+  });
+
+  document.getElementById('chart-subtitle').textContent =
+    `Año 2026 · ${semanas.length} semana(s) · ${semanas[0]?.idate || ''} → ${semanas[semanas.length-1]?.fdate || ''}`;
+}
+
+function renderTable() {
+  const semanas = getFilteredSemanas();
+  const codesMap = getCodesMap();
+  const activeDist = allDist.filter(d => activeSet.has(d));
+
+  // HEAD
+  const head = document.getElementById('table-head');
+  head.innerHTML = `<th>Distribuidor</th>` +
+    semanas.map(s => `<th title="${s.idate} → ${s.fdate}">S${s.numSem}</th>`).join('') +
+    `<th>Total</th>`;
+
+  // BODY
+  const body = document.getElementById('table-body');
+  body.innerHTML = '';
+  const colTotals = semanas.map(() => 0);
+
+  activeDist.forEach(d => {
+    const color = DIST_COLORS[d] || '#888';
+    const vals = semanas.map((s,i) => {
+      const v = codesMap[d]?.[s.semana] || 0;
+      colTotals[i] += v;
+      return v;
+    });
+    const tot = vals.reduce((a,b) => a+b, 0);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td class="dist-name" style="color:${color}">${d}</td>` +
+      vals.map(v => `<td>${v.toLocaleString('es-CO')}</td>`).join('') +
+      `<td class="total-col">${tot.toLocaleString('es-CO')}</td>`;
+    body.appendChild(tr);
+  });
+
+  // FOOT
+  const foot = document.getElementById('table-foot');
+  const grandTotal = colTotals.reduce((a,b) => a+b, 0);
+  foot.innerHTML = `<td>TOTAL</td>` +
+    colTotals.map(v => `<td>${v.toLocaleString('es-CO')}</td>`).join('') +
+    `<td>${grandTotal.toLocaleString('es-CO')}</td>`;
+}
+
+// Iniciar
+loadCSV();
+</script>
+</body>
+</html>
