@@ -340,23 +340,39 @@ function delay(ms){return new Promise(r=>setTimeout(r,ms));}
 // ── PARSE ─────────────────────────────────────────────────────
 function parseCSV(text){
   const lines=text.trim().split('\n');
-  const h=lines[0].split(',').map(s=>s.replace(/"/g,'').trim());
-  const i=k=>h.findIndex(x=>x===k);
-  const iS=i('semana'),iN=i('numero_semana'),iD=i('distribuidor_nombre'),
-        iC=i('registered_codes'),iI=i('idate'),iF=i('fdate');
+  if(lines.length<2) throw new Error('CSV vacío o sin datos');
+  const h=lines[0].split(',').map(s=>s.replace(/"/g,'').trim().toLowerCase());
+  console.log('CSV headers:', h.join(', '));
+
+  // Detección flexible de columnas
+  const fi=k=>h.findIndex(x=>x.includes(k));
+  const iS=fi('semana'), iN=fi('numero'), iD=fi('distribuidor'),
+        iC=fi('registered_codes')||fi('codes'), iI=fi('idate'), iF=fi('fdate');
+
+  console.log('Cols → semana:'+iS+' num:'+iN+' dist:'+iD+' codes:'+iC+' idate:'+iI+' fdate:'+iF);
+
   const rows=[];
   for(let j=1;j<lines.length;j++){
-    const c=csvLine(lines[j]); if(c.length<4) continue;
-    rows.push({semana:c[iS]||'',numSem:parseInt(c[iN])||j,
-      dist:(c[iD]||'').toUpperCase().trim(),codes:parseInt(c[iC])||0,
-      idate:c[iI]||'',fdate:c[iF]||''});
+    const c=csvLine(lines[j]); if(c.length<3) continue;
+    const semVal = iS>=0 ? c[iS]||'' : 'S'+j;
+    const numVal = iN>=0 ? parseInt(c[iN])||j : j;
+    const distVal = iD>=0 ? (c[iD]||'').toUpperCase().trim() : '';
+    const codesVal = iC>=0 ? parseInt(c[iC])||0 : 0;
+    const idateVal = iI>=0 ? c[iI]||'' : '';
+    const fdateVal = iF>=0 ? c[iF]||'' : '';
+    if(!distVal) continue;
+    rows.push({semana:semVal,numSem:numVal,dist:distVal,codes:codesVal,idate:idateVal,fdate:fdateVal});
   }
+
+  if(rows.length===0) throw new Error('No se encontraron filas válidas en el CSV. Headers detectados: '+h.join(', '));
+
   allData=rows;
   const sm={};
   rows.forEach(r=>{if(!sm[r.semana])sm[r.semana]={semana:r.semana,numSem:r.numSem,idate:r.idate,fdate:r.fdate};});
   allSemanas=Object.values(sm).sort((a,b)=>a.numSem-b.numSem);
   allDist=[...new Set(rows.map(r=>r.dist))].filter(Boolean);
   activeSet=new Set(allDist);
+  console.log('Parsed → semanas:'+allSemanas.length+' distribuidores:'+allDist.length+' filas:'+rows.length);
 }
 function csvLine(l){
   const res=[];let c='',q=false;
@@ -394,10 +410,10 @@ function render(){
   document.getElementById('footer-ts').textContent='Fuente: Google Sheets · '+ts;
 
   // COVER
-  const first=allSemanas[0], last=allSemanas[allSemanas.length-1];
+  const firstSem=allSemanas[0]||null, lastSem=allSemanas[allSemanas.length-1]||null;
   document.getElementById('cover-date').textContent='Generado: '+ts;
   document.getElementById('cover-period').textContent=
-    first&&last?`${first.idate} → ${last.fdate}`:'—';
+    firstSem&&lastSem?`${firstSem.idate} → ${lastSem.fdate}`:'—';
 
   renderKPIs();
   renderHallazgos();
@@ -435,7 +451,7 @@ function renderKPIs(){
 
   const kpis=[
     {cls:'red',label:'Total códigos 2026',val:fmt(total),sub:`${allSemanas.length} semanas registradas`},
-    {cls:'',label:'Semanas registradas',val:allSemanas.length,sub:first&&last?`${allSemanas[0].idate} → ${allSemanas[allSemanas.length-1].fdate}`:''},
+    {cls:'',label:'Semanas registradas',val:allSemanas.length,sub:allSemanas.length>0?`${allSemanas[0].idate} → ${allSemanas[allSemanas.length-1].fdate}`:''},
     {cls:'',label:'Promedio semanal',val:fmt(avg),sub:'códigos por semana'},
     {cls:'',label:'Semana pico',val:fmt(peakVal),sub:peakSem?peakSem.semana:'—'},
     {cls:'',label:'Distribuidor líder',val:leader,sub:leader?fmt(totalDist(leader))+' códigos totales':''},
